@@ -10,7 +10,7 @@ namespace Backend_DAL.Models
     {
         public int user_contect_id;
 
-        public int secondUserAcceptedRequest { get; set; }
+        public requestStatus secondUserAcceptedRequest { get; set; }
         public User firstUser { get; set; }
         public User secondUser { get; set; }
     }
