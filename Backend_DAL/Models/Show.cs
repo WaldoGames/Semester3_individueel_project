@@ -10,8 +10,8 @@ namespace Backend_DAL.Models
 {
     internal class Show
     {
-        [Key]
-        public int show_id { get; set; }
+
+        public int Id { get; set; }
         public string show_name { get; set; }
         public string show_description { get; set; }
         public string show_language { get; set;}

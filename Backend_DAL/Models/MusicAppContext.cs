@@ -28,16 +28,16 @@ namespace Backend_DAL.Models
                 .OnDelete(DeleteBehavior.Restrict); // or use DeleteBehavior.Cascade if appropriate
            
             modelBuilder.Entity<User>()
-                .HasMany(rp => rp.Contacts)
+                .HasMany(rp => rp.RequestsSendt)
                 .WithOne(u=>u.firstUser)
                 .HasForeignKey(rp => rp.firstUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
-                .HasMany(rp => rp.Contacts)
+                .HasMany(rp => rp.RequestReceived)
                 .WithOne(u => u.secondUser)
                 .HasForeignKey(rp => rp.secondUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<RecordingPlaylist>()
                 .HasMany(rp => rp.Guests)

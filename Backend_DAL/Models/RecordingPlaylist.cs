@@ -10,8 +10,10 @@ namespace Backend_DAL.Models
 {
     internal class RecordingPlaylist
     {
-        [Key]
-        public int recordingPlaylist_id { get; set; }
+       
+        public int Id { get; set; }
+
+        public string recordingPlayListName { get; set; }
 
         // Foreign key
         public int creatorId { get; set; }

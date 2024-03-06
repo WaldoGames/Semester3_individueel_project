@@ -9,8 +9,14 @@ namespace Backend_DAL.Models
 {
     internal class User
     {
-        [Key]
-        public int user_id { get; set; }
+
+        public int Id { get; set; }
+
+        public string user_name { get; set; }
+
+        public string user_email { get; set; }
+
+        public string password { get; set; }
 
         // Navigation property for playlists created by the user
         public ICollection<RecordingPlaylist> CreatedPlaylists { get; set; }
@@ -19,6 +25,7 @@ namespace Backend_DAL.Models
         public ICollection<RecordingPlaylist> RecordingGuests { get; set; }
 
         public ICollection<Show> Shows { get; set; }
-        public ICollection<User_contact> Contacts { get; set; }
+        public ICollection<User_contact> RequestsSendt { get; set; }
+        public ICollection<User_contact> RequestReceived { get; set; }
     }
 }

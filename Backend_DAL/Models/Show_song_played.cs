@@ -9,8 +9,8 @@ namespace Backend_DAL.Models
 {
     internal class Show_song_played
     {
-        [Key]
-        public int show_song_played_id { get; set; }
+
+        public int Id { get; set; }
 
 
         public DateTime timePlayed { get; set; }

@@ -11,7 +11,7 @@ namespace Backend_DAL.Models
     internal class User_contact
     {
         [Key]
-        public int user_contect_id;
+        public int Id { get; set; }
 
         public requestStatus secondUserAcceptedRequest { get; set; }
         public int firstUserId { get; set; }
@@ -24,6 +24,7 @@ namespace Backend_DAL.Models
 
         // Navigation property
         [ForeignKey("secondUserId")]
+        
         public User secondUser { get; set; }
     }
     enum requestStatus

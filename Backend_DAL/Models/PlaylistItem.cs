@@ -9,8 +9,8 @@ namespace Backend_DAL.Models
 {
     internal class PlaylistItem
     {
-        [Key]
-        public int playlist_id { get; set; }
+
+        public int Id { get; set; }
         public string discription { get; set; }
         public RecordingPlaylist playlist { get; set; }
         public Song? playlistItemSong { get; set; }
