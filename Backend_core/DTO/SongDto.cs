@@ -14,6 +14,6 @@ namespace Backend_core.DTO
         public DateTime Release_date { get; set; }
 
         public string Information { get; set; }
-        public ICollection<ArtistDto> Creators { get; set; }
+        public ICollection<ArtistDto>? Creators { get; set; }
     }
 }

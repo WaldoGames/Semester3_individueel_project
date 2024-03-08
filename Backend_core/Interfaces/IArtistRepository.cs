@@ -10,11 +10,13 @@ namespace Backend_core.Interfaces
 {
     public interface IArtistRepository
     {
-        public Result<ArtistsDto> GetArtistsUsedInShow(int userId, int max);
-        public Result<ArtistsDto> GetArtistsUsedInShow(int userId, int max, int Offset);
+        public Result<ArtistsDto> GetArtistsListFromSongList(List<int> songIds, int max, int Offset=0);
+        public Result<ArtistsDto> GetArtistsFromSong(int songId);
         public NullableResult<ArtistDto> GetArtistById(int artistId);
         public SimpleResult AddNewArtist(NewArtistsDto newArtist);
         public SimpleResult RemoveArtist(int artistId);
         public SimpleResult UpdateArtist(int artistId, UpdateArtistDto updateArtist);
+
+        public Result<bool> DoesArtistExist(int artistId);
     }
 }

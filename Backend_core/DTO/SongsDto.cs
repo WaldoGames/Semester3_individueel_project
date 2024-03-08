@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Backend_core.DTO
 {
-    public class ArtistDto
+    public class SongsDto
     {
-        public int Id { get; set; }
-        public string name { get; set; }
-
-        //public ICollection<SongDto> songs { get; set; }
+        public List<SongDto> Songs { get; set; } = new List<SongDto>();
     }
 }

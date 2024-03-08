@@ -17,5 +17,7 @@ namespace Backend_DAL.Models
 
         public string Information { get; set; }
         public ICollection<Artist> Creators { get; set; }
+
+        public ICollection<Show_song_played> SongsPlayed { get; set; }
     }
 }

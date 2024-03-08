@@ -34,7 +34,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("songsId");
 
-                    b.ToTable("ArtistSong");
+                    b.ToTable("ArtistSong", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Artist", b =>
@@ -51,7 +51,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Artists");
+                    b.ToTable("Artists", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.PlaylistItem", b =>
@@ -78,7 +78,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("playlistItemSongId");
 
-                    b.ToTable("PlaylistItems");
+                    b.ToTable("PlaylistItems", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.RecordingPlaylist", b =>
@@ -100,7 +100,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("creatorId");
 
-                    b.ToTable("Recordings");
+                    b.ToTable("Recordings", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Show", b =>
@@ -125,7 +125,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shows");
+                    b.ToTable("Shows", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Show_song_played", b =>
@@ -151,7 +151,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("songId");
 
-                    b.ToTable("Show_Song_Playeds");
+                    b.ToTable("Show_Song_Playeds", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Song", b =>
@@ -175,7 +175,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Songs");
+                    b.ToTable("Songs", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.User", b =>
@@ -200,7 +200,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.User_contact", b =>
@@ -226,7 +226,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("secondUserId");
 
-                    b.ToTable("User_Contacts");
+                    b.ToTable("User_Contacts", (string)null);
                 });
 
             modelBuilder.Entity("RecordingPlaylistUser", b =>
@@ -241,7 +241,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("RecordingGuestsId");
 
-                    b.ToTable("RecordingPlaylistUser");
+                    b.ToTable("RecordingPlaylistUser", (string)null);
                 });
 
             modelBuilder.Entity("ShowUser", b =>
@@ -256,7 +256,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasIndex("hostsId");
 
-                    b.ToTable("ShowUser");
+                    b.ToTable("ShowUser", (string)null);
                 });
 
             modelBuilder.Entity("ArtistSong", b =>

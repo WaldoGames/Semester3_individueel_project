@@ -16,6 +16,8 @@ namespace Backend_DAL.Models
         public string show_description { get; set; }
         public string show_language { get; set;}
 
-        public Collection<User> hosts { get; set; }
+        public ICollection<Show_song_played> show_Songs { get; set; }
+
+        public ICollection<User> hosts { get; set; }
     }
 }

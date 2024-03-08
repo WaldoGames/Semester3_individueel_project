@@ -8,6 +8,6 @@ namespace Backend_core.DTO
 {
     public class ArtistsDto
     {
-        public List<ArtistDto> Artists { get; set; }
+        public List<ArtistDto> Artists { get; set; } = new List<ArtistDto>();
     }
 }
