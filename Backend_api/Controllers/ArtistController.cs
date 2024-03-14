@@ -14,6 +14,8 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Backend_api.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ArtistController : Controller
     {
         ArtistService artistService;
@@ -39,8 +41,13 @@ namespace Backend_api.Controllers
                     // Return BadRequest with the error message
                     return BadRequest(response);
                 }
+                var collection = new Dictionary<int, string>();
 
-            return Ok(artistService.getArtistsUsedInShow(param1).Data.Artists.Select(a => a.name));
+                var artists = artistService.getArtistsUsedInShow(param1).Data.Artists
+                   .Select(a => new ArtistResponse { key = a.Id, Name = a.name })
+                   .ToList();
+
+                return Ok(artists);
             }
             catch (Exception ex)
             {
@@ -48,6 +55,11 @@ namespace Backend_api.Controllers
                 // Optionally, you can return a generic error response
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
+        }
+        private class ArtistResponse
+        {
+            public int key { get; set; }
+            public string Name { get; set; }
         }
 
     }
