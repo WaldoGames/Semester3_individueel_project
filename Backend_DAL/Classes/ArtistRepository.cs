@@ -74,7 +74,7 @@ namespace Backend_DAL.Classes
                 {
                     Result<ArtistsDto> songsArtists = GetArtistsFromSong(songId);
 
-                    if (songsArtists.IsFailed)
+                    if (songsArtists.IsFailedError)
                     {
                         continue;
                     }

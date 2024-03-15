@@ -25,24 +25,28 @@ namespace Backend_core.Classes
         {
             Result<bool> showExists = ShowRepository.DoesShowExist(showId);
 
-            if (showExists.IsFailed)
+            if (showExists.IsFailedError)
             {
-                return new Result<ArtistsDto> { ErrorMessage= "core->ArtistService->getArtistsUsedInShow error taken from showrepositroy->DoesShowExist" };
+                return new NullableResult<ArtistsDto> { ErrorMessage= "core->ArtistService->getArtistsUsedInShow error taken from showrepositroy->DoesShowExist" };
+            }
+            if (showExists.Data == false)
+            {
+                return new NullableResult<ArtistsDto> { WarningMessage = "Show does not exist" };
             }
             Result<SongsDto> songs = SongRepository.GetSongsUsedByShow(showId);
 
-            if (songs.IsFailed)
+            if (songs.IsFailedError)
             {
-                return new Result<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from SongRepository->GetSongsUsedByShow" };
+                return new NullableResult<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from SongRepository->GetSongsUsedByShow" };
             }
             Result<ArtistsDto> artists= ArtistRepository.GetArtistsListFromSongList(songs.Data.Songs.Select(s => s.Id).ToList(), 20);
             
-            if (artists.IsFailed)
+            if (artists.IsFailedError)
             {
-                return new Result<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from ArtistRepository->GetArtistsListFromSongList" };
+                return new NullableResult<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from ArtistRepository->GetArtistsListFromSongList" };
             }
 
-            return new Result<ArtistsDto> { Data = artists.Data };
+            return new NullableResult<ArtistsDto> { Data = artists.Data };
 
         }
     }

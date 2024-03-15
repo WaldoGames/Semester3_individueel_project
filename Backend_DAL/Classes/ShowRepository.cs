@@ -36,7 +36,7 @@ namespace Backend_DAL.Classes
 
                 if (show == null)
                 {
-                    return new NullableResult<ShowDto>() { IsEmpty = true };
+                    return new NullableResult<ShowDto>() { };
                 }
                 else
                 {

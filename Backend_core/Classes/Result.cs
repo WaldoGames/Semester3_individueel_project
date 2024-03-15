@@ -17,7 +17,18 @@ namespace Backend_core.Classes
                 set { errorMessage = Environment.NewLine + value; log.Log(value); }
             }
 
-            public bool IsFailed => !string.IsNullOrEmpty(ErrorMessage);
+            private string warningMessage = string.Empty;
+
+            public string WarningMessage
+            {
+                get { return warningMessage; }
+                set { warningMessage = value;}
+            }
+
+            public bool IsFailedWarning => !string.IsNullOrEmpty(WarningMessage);
+            public bool IsFailedError => !string.IsNullOrEmpty(ErrorMessage);
+
+            public bool IsFailed => (IsFailedWarning||IsFailedError);
 
             ErrorLog log = new ErrorLog();
         }
@@ -36,7 +47,7 @@ namespace Backend_core.Classes
             {
                 Data = result.Data;
             }
-            public bool IsEmpty { get; set; } = false;
+            public bool IsEmpty => Data == null;
         }
         public class ErrorLog
         {

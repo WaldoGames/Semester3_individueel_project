@@ -29,21 +29,37 @@ namespace Backend_api.Controllers
             try
             {
                 Result<ArtistsDto> artistlist = artistService.getArtistsUsedInShow(param1);
-            if (artistlist.IsFailed)
-            {
+                if (artistlist.IsFailed)
+                {
                     // Create the response message with an appropriate status code and error message
-                    var response = new
+                    if (artistlist.IsFailedError)
                     {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        Message = "Error occurred while processing the request."
-                    };
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = "Error occurred while processing the request."
+                        };
+
+                        // Return BadRequest with the error message
+                        return BadRequest(response);
+                    }
+                    else if (artistlist.IsFailedWarning)
+                    {
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = artistlist.WarningMessage
+                        };
 
                     // Return BadRequest with the error message
                     return BadRequest(response);
+                    }
                 }
+
+                
                 var collection = new Dictionary<int, string>();
 
-                var artists = artistService.getArtistsUsedInShow(param1).Data.Artists
+                var artists = artistlist.Data.Artists
                    .Select(a => new ArtistResponse { key = a.Id, Name = a.name })
                    .ToList();
 
