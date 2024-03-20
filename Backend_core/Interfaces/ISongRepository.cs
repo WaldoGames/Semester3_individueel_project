@@ -11,7 +11,7 @@ namespace Backend_core.Interfaces
     public interface ISongRepository
     {
         public Result<SongsDto> GetSongsUsedByShow(int showId);
-
         public Result<bool> DoesSongExist(int songId);
+        public SimpleResult PostPlayedSong(PlaySongDto songPlayed);
     }
 }

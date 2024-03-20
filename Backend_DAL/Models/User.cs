@@ -27,5 +27,7 @@ namespace Backend_DAL.Models
         public ICollection<Show> Shows { get; set; }
         public ICollection<User_contact> RequestsSendt { get; set; }
         public ICollection<User_contact> RequestReceived { get; set; }
+
+
     }
 }

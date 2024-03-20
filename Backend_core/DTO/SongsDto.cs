@@ -8,6 +8,6 @@ namespace Backend_core.DTO
 {
     public class SongsDto
     {
-        public List<SongDto> Songs { get; set; } = new List<SongDto>();
+        public List<SongWithLastPlayedDto> Songs { get; set; } = new List<SongWithLastPlayedDto>();
     }
 }

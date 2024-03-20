@@ -4,6 +4,7 @@ using Backend_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_DAL.Migrations
 {
     [DbContext(typeof(MusicAppContext))]
-    partial class MusicAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240320101412_update special information song")]
+    partial class updatespecialinformationsong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,33 +131,6 @@ namespace Backend_DAL.Migrations
                     b.ToTable("Shows");
                 });
 
-            modelBuilder.Entity("Backend_DAL.Models.Show_song", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Information")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShowId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SongId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShowId");
-
-                    b.HasIndex("SongId");
-
-                    b.ToTable("Show_Song");
-                });
-
             modelBuilder.Entity("Backend_DAL.Models.Show_song_played", b =>
                 {
                     b.Property<int>("Id")
@@ -252,6 +228,33 @@ namespace Backend_DAL.Migrations
                     b.ToTable("User_Contacts");
                 });
 
+            modelBuilder.Entity("Backend_DAL.Models.User_song", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Information")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SongId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("User_Song");
+                });
+
             modelBuilder.Entity("RecordingPlaylistUser", b =>
                 {
                     b.Property<int>("GuestsId")
@@ -325,25 +328,6 @@ namespace Backend_DAL.Migrations
                     b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("Backend_DAL.Models.Show_song", b =>
-                {
-                    b.HasOne("Backend_DAL.Models.Show", "Show")
-                        .WithMany("Songs")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend_DAL.Models.Song", "Song")
-                        .WithMany("Shows")
-                        .HasForeignKey("SongId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Show");
-
-                    b.Navigation("Song");
-                });
-
             modelBuilder.Entity("Backend_DAL.Models.Show_song_played", b =>
                 {
                     b.HasOne("Backend_DAL.Models.Show", "show")
@@ -380,6 +364,25 @@ namespace Backend_DAL.Migrations
                     b.Navigation("firstUser");
 
                     b.Navigation("secondUser");
+                });
+
+            modelBuilder.Entity("Backend_DAL.Models.User_song", b =>
+                {
+                    b.HasOne("Backend_DAL.Models.Song", "Song")
+                        .WithMany("users")
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend_DAL.Models.User", "User")
+                        .WithMany("Songs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Song");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RecordingPlaylistUser", b =>
@@ -419,16 +422,14 @@ namespace Backend_DAL.Migrations
 
             modelBuilder.Entity("Backend_DAL.Models.Show", b =>
                 {
-                    b.Navigation("Songs");
-
                     b.Navigation("show_Songs");
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Song", b =>
                 {
-                    b.Navigation("Shows");
-
                     b.Navigation("SongsPlayed");
+
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.User", b =>
@@ -438,6 +439,8 @@ namespace Backend_DAL.Migrations
                     b.Navigation("RequestReceived");
 
                     b.Navigation("RequestsSendt");
+
+                    b.Navigation("Songs");
                 });
 #pragma warning restore 612, 618
         }

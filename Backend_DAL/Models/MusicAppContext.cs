@@ -52,6 +52,7 @@ namespace Backend_DAL.Models
         public DbSet<Song> Songs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<User_contact> User_Contacts { get; set; }
+        public DbSet<Show_song> Show_Song { get; set; }
 
     }
 }

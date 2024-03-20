@@ -18,6 +18,10 @@ namespace Backend_DAL.Models
 
         public ICollection<Show_song_played> show_Songs { get; set; }
 
+        public ICollection<Show_song> Songs { get; set; }
+
         public ICollection<User> hosts { get; set; }
+
+
     }
 }

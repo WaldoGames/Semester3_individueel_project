@@ -4,6 +4,7 @@ using Backend_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_DAL.Migrations
 {
     [DbContext(typeof(MusicAppContext))]
-    partial class MusicAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240320102937_songsBasedOnUsersToSongsBasedOnShows")]
+    partial class songsBasedOnUsersToSongsBasedOnShows
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,19 +143,19 @@ namespace Backend_DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShowId")
+                    b.Property<int>("SongId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SongId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShowId");
-
                     b.HasIndex("SongId");
 
-                    b.ToTable("Show_Song");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("User_Song");
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Show_song_played", b =>
@@ -327,21 +330,21 @@ namespace Backend_DAL.Migrations
 
             modelBuilder.Entity("Backend_DAL.Models.Show_song", b =>
                 {
-                    b.HasOne("Backend_DAL.Models.Show", "Show")
-                        .WithMany("Songs")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Backend_DAL.Models.Song", "Song")
                         .WithMany("Shows")
                         .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Show");
+                    b.HasOne("Backend_DAL.Models.Show", "User")
+                        .WithMany("Songs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Song");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Show_song_played", b =>

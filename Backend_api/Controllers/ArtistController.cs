@@ -21,14 +21,14 @@ namespace Backend_api.Controllers
         ArtistService artistService;
 
         [HttpGet]
-        [Route("/get")]
-        public IActionResult GetArtists(int param1)
+        [Route("/getArtists")]
+        public IActionResult GetArtists(int ShowId)
         {
             artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository());
 
             try
             {
-                Result<ArtistsDto> artistlist = artistService.getArtistsUsedInShow(param1);
+                Result<ArtistsDto> artistlist = artistService.getArtistsUsedInShow(ShowId);
                 if (artistlist.IsFailed)
                 {
                     // Create the response message with an appropriate status code and error message
@@ -57,7 +57,7 @@ namespace Backend_api.Controllers
                 }
 
                 
-                var collection = new Dictionary<int, string>();
+               // var collection = new Dictionary<int, string>();
 
                 var artists = artistlist.Data.Artists
                    .Select(a => new ArtistResponse { key = a.Id, Name = a.name })
