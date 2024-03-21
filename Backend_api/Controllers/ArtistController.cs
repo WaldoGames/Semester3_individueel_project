@@ -21,8 +21,7 @@ namespace Backend_api.Controllers
         ArtistService artistService;
 
         [HttpGet]
-        [Route("/getArtists")]
-        public IActionResult GetArtists(int ShowId)
+        public IActionResult GetArtists([FromQuery(Name = "show")] int ShowId)
         {
             artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository());
 

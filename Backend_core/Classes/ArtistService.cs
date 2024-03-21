@@ -34,6 +34,10 @@ namespace Backend_core.Classes
             {
                 return new NullableResult<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from SongService.GetSongsUsedInShow" };
             }
+            if(songs.IsFailedWarning)
+            {
+                return new NullableResult<ArtistsDto> { WarningMessage = songs.WarningMessage };
+            }
             Result<ArtistsDto> artists= ArtistRepository.GetArtistsListFromSongList(songs.Data.Songs.Select(s => s.Id).ToList(), 20);
             
             if (artists.IsFailedError)

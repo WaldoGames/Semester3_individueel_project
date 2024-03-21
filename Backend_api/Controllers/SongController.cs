@@ -19,8 +19,7 @@ namespace Backend_api.Controllers
         SongService SongService;
 
         [HttpGet]
-        [Route("/getSongs")]
-        public IActionResult GetSongsUsedInShow(int ShowId)
+        public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
         {
             SongService = new SongService(new ShowRepository(), new SongRepository());
 
@@ -54,11 +53,8 @@ namespace Backend_api.Controllers
                     }
                 }
 
-
-                var collection = new Dictionary<int, string>();
-
                 var songs = SongsList.Data.Songs
-                  .Select(a => new { key = a.Id, Name = a.name })
+                  .Select(a => new { key = a.Id, Name = a.name, LastPlayed = a.LastPlayed })
                   .ToList();
 
                 return Ok(songs);
@@ -72,7 +68,7 @@ namespace Backend_api.Controllers
         }
 
         [HttpPost]
-        [Route("/playSongOnShow")]
+        [Route("/played")]
         public IActionResult PlaySongOnShow(PlaySongDto playSong){
 
             SongService = new SongService(new ShowRepository(), new SongRepository());
