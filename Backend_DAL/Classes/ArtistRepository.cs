@@ -14,9 +14,25 @@ namespace Backend_DAL.Classes
     {
         MusicAppContext context = new MusicAppContext();
 
-        public SimpleResult AddNewArtist(NewArtistsDto newArtist)
+        public SimpleResult AddNewArtist(NewArtistDto newArtist)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Artist newArtistObject = new Artist()
+                {
+                    name = newArtist.ArtistName,
+                };
+
+                context.Artists.Add(newArtistObject);
+                context.SaveChanges();
+
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult() { ErrorMessage = "Dal->ArtistRepository->AddNewArtist " + e.Message };
+            }
+
         }
 
         public Result<bool> DoesArtistExist(int artistId)
@@ -92,7 +108,7 @@ namespace Backend_DAL.Classes
             }
             catch (Exception e)
             {
-                return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistsListFromSongList" + e.Message };
+                return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistsListFromSongList " + e.Message };
             }
         }
         public SimpleResult RemoveArtist(int artistId)

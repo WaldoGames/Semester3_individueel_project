@@ -71,6 +71,20 @@ namespace Backend_api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
         }
+
+        [HttpPost]
+        public IActionResult AddArtist(NewArtistDto newArtists)
+        {
+            artistService = new ArtistService(new ShowRepository(), new SongRepository(),new ArtistRepository());
+
+            SimpleResult result = artistService.addNewArtist(newArtists);
+
+            if (result.IsFailedError)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
         private class ArtistResponse
         {
             public int key { get; set; }

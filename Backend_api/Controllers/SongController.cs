@@ -21,7 +21,7 @@ namespace Backend_api.Controllers
         [HttpGet]
         public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
         {
-            SongService = new SongService(new ShowRepository(), new SongRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
 
             try
             {
@@ -71,7 +71,7 @@ namespace Backend_api.Controllers
         [Route("/played")]
         public IActionResult PlaySongOnShow(PlaySongDto playSong){
 
-            SongService = new SongService(new ShowRepository(), new SongRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
 
             SimpleResult result = SongService.PostSongPlayed(playSong);
 
@@ -83,7 +83,28 @@ namespace Backend_api.Controllers
 
         }
 
+        [HttpPost]
+        [Route("")]
+        public IActionResult PlaySongOnShow(NewSongDto NewSong)
+        {
 
-        
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+
+            SimpleResult result = SongService.PostNewSong(NewSong);
+
+            if (result.IsFailedError)
+            {
+                return BadRequest();
+            }
+            if (result.IsFailedWarning)
+            {
+                return BadRequest(result.WarningMessage);
+            }
+            return Ok();
+
+        }
+
+
+
     }
 }

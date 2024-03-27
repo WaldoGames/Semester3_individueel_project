@@ -22,7 +22,7 @@ namespace Backend_core.Classes
             SongRepository = songRepository;
             ArtistRepository = artistRepository;
 
-            SongService = new SongService(showRepository, songRepository);
+            SongService = new SongService(showRepository, songRepository, artistRepository);
         }
 
         public Result<ArtistsDto> getArtistsUsedInShow(int showId)
@@ -47,6 +47,11 @@ namespace Backend_core.Classes
 
             return new NullableResult<ArtistsDto> { Data = artists.Data };
 
+        }
+
+        public SimpleResult addNewArtist(NewArtistDto newArtists)
+        {
+            return ArtistRepository.AddNewArtist(newArtists);
         }
     }
 }

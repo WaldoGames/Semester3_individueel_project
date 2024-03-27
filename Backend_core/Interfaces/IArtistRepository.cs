@@ -13,7 +13,7 @@ namespace Backend_core.Interfaces
         public Result<ArtistsDto> GetArtistsListFromSongList(List<int> songIds, int max, int Offset=0);
         public Result<ArtistsDto> GetArtistsFromSong(int songId);
         public NullableResult<ArtistDto> GetArtistById(int artistId);
-        public SimpleResult AddNewArtist(NewArtistsDto newArtist);
+        public SimpleResult AddNewArtist(NewArtistDto newArtist);
         public SimpleResult RemoveArtist(int artistId);
         public SimpleResult UpdateArtist(int artistId, UpdateArtistDto updateArtist);
 

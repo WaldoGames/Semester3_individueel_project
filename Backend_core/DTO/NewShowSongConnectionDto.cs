@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Backend_core.DTO
 {
-    public class NewArtistsDto
+    public class NewShowSongConnectionDto
     {
-        public string ArtistName { get; set; }
+        public int songId;
+        public int showId { get; set; }
+        public string User_description { get; set; }
     }
 }

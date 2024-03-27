@@ -11,12 +11,14 @@ namespace Backend_core.DTO
         public int Id { get; set; }
         public string name { get; set; }
         public DateTime Release_date { get; set; }
-
-        public string User_description { get; set; }
         public List<ArtistDto>? Creators { get; set; }
     }
+    public class SongWithShowConnectionDto: SongDto
+    {
+        public string User_description { get; set; }
+    }
 
-    public class SongWithLastPlayedDto : SongDto
+    public class SongWithLastPlayedDto : SongWithShowConnectionDto
     {
         public int AmountPlayed { get; set; }
         public DateTime LastPlayed { get; set;}

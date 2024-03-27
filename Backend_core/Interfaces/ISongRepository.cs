@@ -13,5 +13,10 @@ namespace Backend_core.Interfaces
         public Result<SongsDto> GetSongsUsedByShow(int showId);
         public Result<bool> DoesSongExist(int songId);
         public SimpleResult PostPlayedSong(PlaySongDto songPlayed);
+        public Result<int> PostNewSong(NewSongDto newSongDto);
+
+        public SimpleResult AddSongToShow(NewSongDto newSongDto, int songId);
+        public SimpleResult AddSongToShow(NewShowSongConnectionDto newSongDto);
+
     }
 }

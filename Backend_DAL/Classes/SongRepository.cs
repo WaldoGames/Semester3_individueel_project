@@ -14,6 +14,33 @@ namespace Backend_DAL.Classes
     {
         MusicAppContext context = new MusicAppContext();
 
+        public SimpleResult AddSongToShow(NewSongDto newSongDto,int songId)
+        {
+            return AddSongToShow(new NewShowSongConnectionDto { showId = newSongDto.showId, User_description= newSongDto.User_description, songId=songId });
+        }
+
+        public SimpleResult AddSongToShow(NewShowSongConnectionDto newSongDto)
+        {
+            try
+            {
+                Show_song show_Song = new Show_song()
+                {
+                    Information = newSongDto.User_description,
+                    Show = context.Shows.Where(s => s.Id == newSongDto.showId).First(),
+                    Song = context.Songs.Where(s => s.Id == newSongDto.songId).First(),
+                };
+
+                context.Show_Song.Add(show_Song);
+                context.SaveChanges();
+                return new SimpleResult();
+
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult() { ErrorMessage = "SongRepository->AddSongToShow "+ e.Message };
+            }
+        }
+
         public Result<bool> DoesSongExist(int songId)
         {
             try
@@ -54,6 +81,37 @@ namespace Backend_DAL.Classes
             }
         }
 
+        public Result<int> PostNewSong(NewSongDto newSongDto)
+        {
+            Result<int> result = new Result<int>();
+
+            try
+            {
+                Song newSong = new Song()
+                {
+                    name = newSongDto.name,
+                    Release_date = newSongDto.Release_date,
+                    Creators = context.Artists.Where(a => newSongDto.CreatorIds.Contains(a.Id)).ToList()
+                };
+
+                if (newSong.Creators.Count != newSongDto.CreatorIds.Count)
+                {
+                    result.WarningMessage = "not all given creators where able to be added to a song";
+                }
+
+                context.Songs.Add(newSong);
+                context.SaveChanges();
+                result.Data = newSong.Id;
+                return result;
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage= "Dal->SongRepository->PostNewSong error:" + e.Message;
+                return result;
+                //throw;
+            }
+            
+        }
         public SimpleResult PostPlayedSong(PlaySongDto songPlayed)
         {
             try
