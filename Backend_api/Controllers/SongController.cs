@@ -68,24 +68,8 @@ namespace Backend_api.Controllers
         }
 
         [HttpPost]
-        [Route("/played")]
-        public IActionResult PlaySongOnShow(PlaySongDto playSong){
-
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
-
-            SimpleResult result = SongService.PostSongPlayed(playSong);
-
-            if (result.IsFailedError)
-            {
-                return BadRequest();
-            }
-            return Ok();
-
-        }
-
-        [HttpPost]
         [Route("")]
-        public IActionResult PlaySongOnShow(NewSongDto NewSong)
+        public IActionResult AddNewSong(NewSongDto NewSong)
         {
 
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
@@ -99,6 +83,23 @@ namespace Backend_api.Controllers
             if (result.IsFailedWarning)
             {
                 return BadRequest(result.WarningMessage);
+            }
+            return Ok();
+
+        }
+
+        [HttpPost]
+        [Route("/played")]
+        public IActionResult PlaySongOnShow(PlaySongDto playSong)
+        {
+
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+
+            SimpleResult result = SongService.PostSongPlayed(playSong);
+
+            if (result.IsFailedError)
+            {
+                return BadRequest();
             }
             return Ok();
 

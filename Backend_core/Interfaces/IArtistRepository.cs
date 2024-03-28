@@ -12,6 +12,8 @@ namespace Backend_core.Interfaces
     {
         public Result<ArtistsDto> GetArtistsListFromSongList(List<int> songIds, int max, int Offset=0);
         public Result<ArtistsDto> GetArtistsFromSong(int songId);
+
+        public Result<ArtistsDto> GetArtistsForSearch(string name);
         public NullableResult<ArtistDto> GetArtistById(int artistId);
         public SimpleResult AddNewArtist(NewArtistDto newArtist);
         public SimpleResult RemoveArtist(int artistId);

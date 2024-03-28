@@ -11,6 +11,7 @@ using System.Net.Http;
 
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Components;
 
 namespace Backend_api.Controllers
 {
@@ -57,6 +58,63 @@ namespace Backend_api.Controllers
 
                 
                // var collection = new Dictionary<int, string>();
+
+                var artists = artistlist.Data.Artists
+                   .Select(a => new ArtistResponse { key = a.Id, Name = a.name })
+                   .ToList();
+
+                return Ok(artists);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // Optionally, you can return a generic error response
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
+            }
+        }
+        [HttpGet]
+        [Route("search")]
+        public IActionResult GetArtistsByPartialName([FromQuery(Name = "search")] string name)
+        {
+            artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+
+            try
+            {
+                Result<ArtistsDto> artistlist = artistService.getArtistsSearch(name.ToLower());
+                if (artistlist.IsFailed)
+                {
+                    // Create the response message with an appropriate status code and error message
+                    if (artistlist.IsFailedError)
+                    {
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = "Error occurred while processing the request."
+                        };
+
+                        // Return BadRequest with the error message
+                        return BadRequest(response);
+                    }
+                    else if (artistlist.IsFailedWarning)
+                    {
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = artistlist.WarningMessage
+                        };
+
+                        // Return BadRequest with the error message
+                        return BadRequest(response);
+                    }
+                }
+
+
+                // var collection = new Dictionary<int, string>();
+
+                if (artistlist.Data == null || artistlist.Data.Artists.Count == 0)
+                {
+                    return Ok();
+                }
 
                 var artists = artistlist.Data.Artists
                    .Select(a => new ArtistResponse { key = a.Id, Name = a.name })

@@ -54,6 +54,33 @@ namespace Backend_DAL.Classes
             throw new NotImplementedException();
         }
 
+        public Result<ArtistsDto> GetArtistsForSearch(string name)
+        {
+            try
+            {
+                List<Artist> artists = context.Artists.Where(a => a.name.Contains(name)).Take(3).ToList();
+
+                if (artists.Count() == 0)
+                {
+                    return new Result<ArtistsDto> {};
+                }
+
+                ArtistsDto artistsDto = new ArtistsDto();
+
+                artists.ForEach(delegate (Artist artist)
+                {
+                    artistsDto.Artists.Add(new ArtistDto() { Id = artist.Id, name = artist.name });
+                });
+
+                return new Result<ArtistsDto> { Data = artistsDto };
+
+            }
+            catch (Exception e)
+            {
+                return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistsForSearch: " + e.Message };
+            }
+        }
+
         public Result<ArtistsDto> GetArtistsFromSong(int songId)
         {
             try

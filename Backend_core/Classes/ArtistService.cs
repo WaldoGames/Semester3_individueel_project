@@ -49,6 +49,19 @@ namespace Backend_core.Classes
 
         }
 
+        public Result<ArtistsDto> getArtistsSearch(string nane)
+        {
+
+            Result<ArtistsDto> artists = ArtistRepository.GetArtistsForSearch(nane);
+
+            if (artists.IsFailedError)
+            {
+                return new NullableResult<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from ArtistRepository->GetArtistsListFromSongList" };
+            }
+
+            return new NullableResult<ArtistsDto> { Data = artists.Data };
+
+        }
         public SimpleResult addNewArtist(NewArtistDto newArtists)
         {
             return ArtistRepository.AddNewArtist(newArtists);
