@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Backend_core.Classes
 {
+        public static class TestVar
+        {
+        public static bool test = false;
+        }
+
 
         public class SimpleResult
         {
@@ -14,7 +19,7 @@ namespace Backend_core.Classes
             public string ErrorMessage
             {
                 get { return errorMessage; }
-                set { errorMessage = Environment.NewLine+ "Error " + value; log.Log(value); }
+                set { errorMessage = Environment.NewLine+ "Error " + value; if(!TestVar.test)log.Log(value); }
             }
 
             private string warningMessage = string.Empty;
@@ -22,7 +27,7 @@ namespace Backend_core.Classes
             public string WarningMessage
             {
                 get { return warningMessage; }
-                set { warningMessage = Environment.NewLine+ "Warning " + value; log.Log(value); }
+                set { warningMessage = Environment.NewLine+ "Warning " + value; if (!TestVar.test) log.Log(value); }
         }
 
             public bool IsFailedWarning => !string.IsNullOrEmpty(WarningMessage);

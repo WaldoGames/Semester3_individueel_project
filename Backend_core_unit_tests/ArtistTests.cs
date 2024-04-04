@@ -15,6 +15,7 @@ namespace Backend_core_unit_tests
         private IShowRepository showRepository;
         public ArtistTests()
         {
+            TestVar.test = true;
             artistRepository = A.Fake<IArtistRepository>();
             songRepository = A.Fake<ISongRepository>();
             showRepository = A.Fake<IShowRepository>();
