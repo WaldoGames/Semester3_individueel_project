@@ -57,7 +57,7 @@ namespace Backend_core.Classes
 
             public void Log(string message)
             {
-                //File.AppendAllText(path + filename, "\n" + DateTime.Now.ToShortTimeString() + ": " + message);
+                File.AppendAllText(path + filename, "\n" + DateTime.Now.ToShortTimeString() + ": " + message);
             }
         }
 }
