@@ -208,5 +208,31 @@ namespace Backend_core_unit_tests
 
             Assert.True(result.IsFailed);
         }
+
+        [Fact]
+        public void PostSong_HappyFlow()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   Data = 1
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+        }
     }
 }
