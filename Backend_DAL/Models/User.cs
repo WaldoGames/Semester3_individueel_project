@@ -11,12 +11,9 @@ namespace Backend_DAL.Models
     {
 
         public int Id { get; set; }
-
-        public string user_name { get; set; }
-
         public string user_email { get; set; }
+        public string auth0sub { get; set; }
 
-        public string password { get; set; }
 
         // Navigation property for playlists created by the user
         public ICollection<RecordingPlaylist> CreatedPlaylists { get; set; }

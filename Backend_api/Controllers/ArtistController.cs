@@ -10,8 +10,10 @@ using System.Net;
 using System.Net.Http;
 
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Components;
+using System.Web.Http;
 
 namespace Backend_api.Controllers
 {

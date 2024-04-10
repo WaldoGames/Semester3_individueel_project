@@ -5,6 +5,7 @@ using Backend_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,28 @@ namespace Backend_DAL.Classes
             {
                 return new Result<bool>() { ErrorMessage = "Dal->ShowRepository->DoesShowExist error: " + e.Message };
             }
+        }
+
+        public Result<ShowsDto> GetAllShowsWithConnectionToUser(string authSub)
+        {
+            try
+            {
+                List<Show> shows = context.Shows.Where(s => s.hosts.Select(h => h.auth0sub).Contains(authSub)).ToList();
+
+                ShowsDto showsDto = new ShowsDto();
+
+                foreach (Show item in shows)
+                {
+                    showsDto.shows.Add(new ShowDto { Id = item.Id, show_description = item.show_description, show_language = item.show_language, show_name = item.show_name });   
+                }
+                return new Result<ShowsDto> { Data = showsDto };
+            }
+            catch (Exception e)
+            {
+
+                return new Result<ShowsDto> { ErrorMessage = "ShowRepository->GetAllShowsWithConnectionToUser "+ e.Message };
+            }
+           
         }
 
         public NullableResult<ShowDto> GetShowById(int id)

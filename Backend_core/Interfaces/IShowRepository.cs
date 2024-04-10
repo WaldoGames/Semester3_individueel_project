@@ -14,5 +14,7 @@ namespace Backend_core.Interfaces
 
         public Result<bool> DoesShowExist(int showId);
 
+        public Result<ShowsDto> GetAllShowsWithConnectionToUser(string authSub);
+
     }
 }

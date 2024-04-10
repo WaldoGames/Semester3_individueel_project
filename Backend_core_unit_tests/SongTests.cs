@@ -233,6 +233,168 @@ namespace Backend_core_unit_tests
             A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
                new SimpleResult()
             ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result= service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.False(result.IsFailed);
+        }
+
+        [Fact]
+        public void PostSong_Noshow()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = false,
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   Data = 1
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result = service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.True(result.IsFailedWarning);
+            Assert.Contains("can't find your show", result.WarningMessage);
+            Assert.False(result.IsFailedError);
+        }
+
+        [Fact]
+        public void PostSong_ErrorShow()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   ErrorMessage = "error",
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   Data = 1
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result = service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.True(result.IsFailedError);
+            Assert.False(result.IsFailedWarning);
+        }
+
+        [Fact]
+        public void PostSong_NoAritist()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = false,
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   Data = 1
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result = service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.True(result.IsFailedWarning);
+            Assert.Contains("one or more artist could not be added to the song", result.WarningMessage);
+            Assert.False(result.IsFailedError);
+        }
+
+        [Fact]
+        public void PostSong_ErrorAritist()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   
+                   ErrorMessage = "error",
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   Data = 1
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result = service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.True(result.IsFailedError);
+            Assert.False(result.IsFailedWarning);
+        }
+        [Fact]
+        public void PostSong_Warning()
+        {
+            A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+
+                   Data = true,
+               }
+            );
+            A.CallTo(() => showRepository.DoesShowExist(A<int>._)).Returns(
+               new Result<bool>
+               {
+                   Data = true,
+               }
+            );
+            A.CallTo(() => songRepository.PostNewSong(A<NewSongDto>._)).Returns(
+               new Result<int>
+               {
+                   WarningMessage = "warning"
+               }
+            );
+            A.CallTo(() => songRepository.AddSongToShow(A<NewSongDto>._, A<int>._)).Returns(
+               new SimpleResult()
+            ); //songRepository.PostNewSong(newSongDto);
+
+            SimpleResult result = service.PostNewSong(new NewSongDto() { CreatorIds = new List<int> { 1, 2, 3 }, name = "ye", Release_date = new DateTime(2000, 1, 1), showId = 0, User_description = "meh" });
+
+            Assert.True(result.IsFailedWarning);
+            Assert.False(result.IsFailedError);
         }
     }
 }
