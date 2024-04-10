@@ -1,6 +1,7 @@
 ﻿using Backend_core.Classes;
 using Backend_core.DTO;
 using Backend_DAL.Classes;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Net;
@@ -17,6 +18,8 @@ namespace Backend_api.Controllers
     public class SongController : Controller
     {
         SongService SongService;
+
+
 
         [HttpGet]
         public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
@@ -68,7 +71,6 @@ namespace Backend_api.Controllers
         }
 
         [HttpPost]
-        [Route("")]
         public IActionResult AddNewSong(NewSongDto NewSong)
         {
 
@@ -89,7 +91,7 @@ namespace Backend_api.Controllers
         }
 
         [HttpPost]
-        [Route("/played")]
+        [Route("played")]
         public IActionResult PlaySongOnShow(PlaySongDto playSong)
         {
 

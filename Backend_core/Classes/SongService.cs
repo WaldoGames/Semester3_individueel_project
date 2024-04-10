@@ -99,7 +99,10 @@ namespace Backend_core.Classes
                     if (addSongResult.IsFailedError)
                     {
                         return new SimpleResult { ErrorMessage = addSongResult.ErrorMessage };
-                    };
+                    }else if (addSongResult.IsFailedWarning)
+                    {
+                        return new SimpleResult { WarningMessage = addSongResult.WarningMessage };
+                    }
 
                 SimpleResult showSongResult = songRepository.AddSongToShow(newSongDto, addSongResult.Data);
                     if (showSongResult.IsFailedError)
