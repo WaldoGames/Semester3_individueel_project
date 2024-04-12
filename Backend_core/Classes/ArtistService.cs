@@ -49,10 +49,10 @@ namespace Backend_core.Classes
 
         }
 
-        public Result<ArtistsDto> getArtistsSearch(string nane)
+        public Result<ArtistsDto> getArtistsSearch(string name)
         {
 
-            Result<ArtistsDto> artists = ArtistRepository.GetArtistsForSearch(nane);
+            Result<ArtistsDto> artists = ArtistRepository.GetArtistsForSearch(name);
 
             if (artists.IsFailedError)
             {

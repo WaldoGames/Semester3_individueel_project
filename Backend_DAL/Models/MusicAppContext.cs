@@ -16,8 +16,10 @@ namespace Backend_DAL.Models
         {
 
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlServer(@$"Data Source=(LocalDb)\MSSQLLocalDB;initial catalog=Backend_DAL.Models.MusicAppContext;integrated security=True;MultipleActiveResultSets=True;App=Backend_Dal");
+        => options.UseSqlServer(@$"Server=sql_server_container;Database=Backend_DAL;User Id=SA;Password=Pass-Sql-Word-14434-AAA#A;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");//, builder => { builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null); });
+        //Server=sql_server_container;Database=Backend_DAL;User Id=SA;Password=Pass-Sql-Word-14434-AAA#A;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
