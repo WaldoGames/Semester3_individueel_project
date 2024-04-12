@@ -8,6 +8,6 @@ namespace Backend_core.DTO
 {
     public class ShowsDto
     {
-        public List<ShowDto> shows;
+        public List<ShowDto> shows= new List<ShowDto>();
     }
 }

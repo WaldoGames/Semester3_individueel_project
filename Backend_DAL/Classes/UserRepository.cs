@@ -47,7 +47,7 @@ namespace Backend_DAL.Classes
             }
             catch (Exception e)
             {
-                return new Result<bool> { ErrorMessage = "error: UserRepository->DoesUserExist" + e.Message };
+                return new Result<bool> { ErrorMessage = "error: UserRepository->DoesUserExist error:" + e.Message };
             }
         }
     }

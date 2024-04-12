@@ -15,6 +15,32 @@ namespace Backend_DAL.Classes
     {
         MusicAppContext context = new MusicAppContext();
 
+        public SimpleResult CreateNewShow(NewShowDto newShow)
+        {
+            try
+            {
+                User creator = context.Users.Where(u => u.auth0sub == newShow.auth_sub).First();
+
+                Show show = new Show
+                {
+                    show_description = newShow.show_discription,
+                    show_name = newShow.show_name,
+                    show_language = newShow.show_language,
+
+                    hosts = [creator],
+                };
+
+                context.Shows.Add(show);
+                context.SaveChanges();
+
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage = "ShowRepository->CreateNewShow error: " + e.Message };
+            }
+        }
+
         public Result<bool> DoesShowExist(int showId)
         {
             try
