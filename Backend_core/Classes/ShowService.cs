@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Backend_core.Classes
 {
-    internal class ShowService
+    public class ShowService
     {
         IShowRepository showRepository { get; set; }
         IUserRepository userRepository { get; set; }
@@ -19,18 +19,47 @@ namespace Backend_core.Classes
             this.userRepository = userRepository;
         }
 
-        public Result<ShowsDto> GetAllShowsWithConnectionToUser(string sub)
+        public Result<ShowsDto> GetAllShowsWithConnectionToUser(string auth_sub)
         {
-            Result<bool> userResult = userRepository.DoesUserExist(sub);
+            Result<bool> userResult = userRepository.DoesUserExist(auth_sub);
 
             if (userResult.IsFailed)
             {
                 if (userResult.IsFailedWarning) return new Result<ShowsDto> { WarningMessage = userResult.WarningMessage };
                 return new Result<ShowsDto> { ErrorMessage = userResult.ErrorMessage };
             }
+            if (userResult.Data == false)
+            {
+                return new Result<ShowsDto> { WarningMessage = "user doesn't exists" };
+            }
 
-            return showRepository.GetAllShowsWithConnectionToUser(sub);
+            return showRepository.GetAllShowsWithConnectionToUser(auth_sub);
 
+        }
+        public SimpleResult CreateShow(NewShowDto newShow)
+        {
+           Result<bool> userResult = userRepository.DoesUserExist(newShow.auth_sub);
+
+           if (userResult.IsFailed)
+           {
+               if (userResult.IsFailedWarning) return new SimpleResult { WarningMessage = userResult.WarningMessage };
+               return new SimpleResult { ErrorMessage = userResult.ErrorMessage };
+           }
+            if (userResult.Data == false)
+            {
+                return new SimpleResult { WarningMessage= "ShowService->CreateShow user doesn't exist" };
+            }
+
+            try
+            {
+                return showRepository.CreateNewShow(newShow);
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage= "ShowService->CreateShow error: "+ e.Message };
+            }
+
+           
         }
     }
 }

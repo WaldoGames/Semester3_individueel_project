@@ -16,5 +16,7 @@ namespace Backend_core.Interfaces
 
         public Result<ShowsDto> GetAllShowsWithConnectionToUser(string authSub);
 
+        public SimpleResult CreateNewShow(NewShowDto newShow);
+
     }
 }

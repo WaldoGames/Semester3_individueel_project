@@ -10,7 +10,7 @@ namespace Backend_core.Interfaces
 {
     public interface IUserRepository
     {
-        Result<bool> DoesUserExist(string Subid);
+        Result<bool> DoesUserExist(string auth_sub);
         SimpleResult AddNewUser(NewUserDto newUser);
     }
 }
