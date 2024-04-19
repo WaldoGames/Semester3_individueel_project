@@ -18,5 +18,5 @@
     <ProjectReference Include="..\Backend_core\Backend_core.csproj" />
     <ProjectReference Include="..\Backend_DAL\Backend_DAL.csproj" />
   </ItemGroup>
-
+ 
 </Project>
