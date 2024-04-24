@@ -57,7 +57,7 @@ namespace Backend_api.Controllers
                 }
 
                 var songs = SongsList.Data.Songs
-                  .Select(a => new { key = a.Id, Name = a.name, LastPlayed = a.LastPlayed })
+                  .Select(a => new { key = a.Id, Name = a.name, LastPlayed = a.LastPlayed, AmountPlayed = a.AmountPlayed })
                   .ToList();
 
                 return Ok(songs);

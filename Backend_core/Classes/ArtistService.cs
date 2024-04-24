@@ -25,6 +25,27 @@ namespace Backend_core.Classes
             SongService = new SongService(showRepository, songRepository, artistRepository);
         }
 
+        /*
+         * WIP:
+         * public Result<int> GetArtistPlayedCount(int artistId, int showId)
+        {
+            Result<SongsDto> songs = SongService.GetSongsUsedInShow(showId);
+
+            if (songs.IsFailedError)
+            {
+                return new Result<int> { ErrorMessage = "core->ArtistService->GetArtistPlayedCount error taken from SongService.GetSongsUsedInShow" };
+            }
+            if (songs.IsFailedWarning)
+            {
+                return new Result<int> { WarningMessage = songs.WarningMessage };
+            }
+
+            int count = songs.Data.Songs.Where(s => s.Creators.Select(c => c.Id).Contains(artistId)).Count();
+
+            return
+
+        }*/
+
         public Result<ArtistsDto> getArtistsUsedInShow(int showId)
         {
 
