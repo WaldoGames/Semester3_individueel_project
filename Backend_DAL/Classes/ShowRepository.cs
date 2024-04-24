@@ -13,7 +13,7 @@ namespace Backend_DAL.Classes
 {
     public class ShowRepository : IShowRepository
     {
-        MusicAppContext context = new MusicAppContext();
+        readonly MusicAppContext context = new MusicAppContext();
 
         public SimpleResult CreateNewShow(NewShowDto newShow)
         {
@@ -77,11 +77,11 @@ namespace Backend_DAL.Classes
            
         }
 
-        public NullableResult<ShowDto> GetShowById(int id)
+        public NullableResult<ShowDto> GetShowById(int showId)
         {
             try
             {
-                Show? show = context.Shows.Where(s => s.Id == id).FirstOrDefault();
+                Show? show = context.Shows.Where(s => s.Id == showId).FirstOrDefault();
 
                 if (show == null)
                 {
@@ -96,7 +96,7 @@ namespace Backend_DAL.Classes
             }
             catch (Exception)
             {
-                return new NullableResult<ShowDto> { ErrorMessage = "Error from: Dal->ArtistRepository->GetShowById->[ Id: " + id + "]" };
+                return new NullableResult<ShowDto> { ErrorMessage = "Error from: Dal->ArtistRepository->GetShowById->[ Id: " + showId + "]" };
             }
         }
     }

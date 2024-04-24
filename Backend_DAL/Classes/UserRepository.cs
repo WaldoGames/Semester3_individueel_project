@@ -12,7 +12,7 @@ namespace Backend_DAL.Classes
 {
     public class UserRepository : IUserRepository
     {
-        MusicAppContext context = new MusicAppContext();
+        readonly MusicAppContext context = new MusicAppContext();
         public SimpleResult AddNewUser(NewUserDto newUser)
         {
             try
@@ -31,11 +31,11 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public Result<bool> DoesUserExist(string Subid)
+        public Result<bool> DoesUserExist(string auth_sub)
         {
             try
             {
-                if(context.Users.Where(u => u.auth0sub == Subid).Count() == 1)
+                if(context.Users.Where(u => u.auth0sub == auth_sub).Count() == 1)
                 {
                     return new Result<bool> { Data = true };
                 }

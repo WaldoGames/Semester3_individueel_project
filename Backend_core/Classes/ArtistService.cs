@@ -56,10 +56,10 @@ namespace Backend_core.Classes
 
             if (artists.IsFailedError)
             {
-                return new NullableResult<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from ArtistRepository->GetArtistsListFromSongList" };
+                return new Result<ArtistsDto> { ErrorMessage = "core->ArtistService->getArtistsUsedInShow error taken from ArtistRepository->GetArtistsListFromSongList" };
             }
 
-            return new NullableResult<ArtistsDto> { Data = artists.Data };
+            return new Result<ArtistsDto> { Data = artists.Data };
 
         }
         public SimpleResult addNewArtist(NewArtistDto newArtists)

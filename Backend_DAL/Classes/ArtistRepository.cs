@@ -12,7 +12,7 @@ namespace Backend_DAL.Classes
 {
     public class ArtistRepository : IArtistRepository
     {
-        MusicAppContext context = new MusicAppContext();
+         readonly MusicAppContext context = new MusicAppContext();
 
         public SimpleResult AddNewArtist(NewArtistDto newArtist)
         {
@@ -60,7 +60,7 @@ namespace Backend_DAL.Classes
             {
                 List<Artist> artists = context.Artists.Where(a => a.name.Contains(name)).Take(3).ToList();
 
-                if (artists.Count() == 0)
+                if (!artists.Any())
                 {
                     return new Result<ArtistsDto> {};
                 }
@@ -87,7 +87,7 @@ namespace Backend_DAL.Classes
             {
                 List<Artist> artists = context.Artists.Where(a=>a.songs.Select(s=>s.Id).Contains(songId)).ToList();
 
-                if(artists.Count() == 0) {
+                if(!artists.Any()) {
                     return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistFromSong->[ songId: " + songId + "]:" + "no artist found for songId :" + songId };
                 }
 
@@ -117,7 +117,7 @@ namespace Backend_DAL.Classes
                 {
                     Result<ArtistsDto> songsArtists = GetArtistsFromSong(songId);
 
-                    if (songsArtists.IsFailedError)
+                    if (songsArtists.IsFailedError|| songsArtists.Data==null || !songsArtists.Data.Artists.Any())
                     {
                         continue;
                     }

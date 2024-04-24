@@ -12,7 +12,7 @@ namespace Backend_DAL.Classes
 {
     public class SongRepository : ISongRepository
     {
-        MusicAppContext context = new MusicAppContext();
+        readonly MusicAppContext context = new MusicAppContext();
 
         public SimpleResult AddSongToShow(NewSongDto newSongDto,int songId)
         {
@@ -59,8 +59,7 @@ namespace Backend_DAL.Classes
         {
             try
             {
-                List<Song> songs = new List<Song>();
-                //songs = context.Songs.Where(s=>s.SongsPlayed.Select(sp=>sp.show.Id).Contains(showId)).ToList();
+                List<Song> songs;
                 songs = context.Songs.Where(s => s.Shows.Select(sp => sp.Show.Id).Contains(showId)).ToList();
 
                 SongsDto returnValue = new SongsDto();
@@ -108,7 +107,6 @@ namespace Backend_DAL.Classes
             {
                 result.ErrorMessage= "Dal->SongRepository->PostNewSong error:" + e.Message;
                 return result;
-                //throw;
             }
             
         }

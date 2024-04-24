@@ -24,7 +24,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void getArtistsUsedInShow_happyflow()
+        public void getArtistsUsedInShow_happyflow_3ArtistReturned()
         {
             ArtistDto doubleArtist = new ArtistDto { Id = 1, name = "jeff" };
             List<int> idList = new List<int> { 1, 2, 3 };
@@ -76,7 +76,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void getArtistsUsedInShow_NoShow()
+        public void getArtistsUsedInShow_NoShow_WarningShowDoesntExist()
         {
             ArtistDto doubleArtist = new ArtistDto { Id = 1, name = "jeff" };
             List<int> idList = new List<int> { 1, 2, 3 };
@@ -126,6 +126,7 @@ namespace Backend_core_unit_tests
 
 
         }
+
 
     }
 }

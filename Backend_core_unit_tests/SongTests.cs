@@ -27,7 +27,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void  GetSongsUsedInShow_happyFlow()
+        public void  GetSongsUsedInShow_happyFlow_SongCountIs2()
         {
 
             ArtistDto doubleArtist = new ArtistDto { Id = 1, name = "jeff" };
@@ -63,7 +63,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void GetSongsUsedInShow_ShowNotFound()
+        public void GetSongsUsedInShow_ShowNotFound_ResultIsFailed()
         {
 
             ArtistDto doubleArtist = new ArtistDto { Id = 1, name = "jeff" };
@@ -99,7 +99,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void GetSongsUsedInShow_emptyList()
+        public void GetSongsUsedInShow_emptyList_ResultDoesntFailButSongListIsEmpty()
         {
 
             ArtistDto doubleArtist = new ArtistDto { Id = 1, name = "jeff" };
@@ -133,7 +133,7 @@ namespace Backend_core_unit_tests
 
         [Fact]
 
-        public void PlaySongOnShow_HappyFlow()
+        public void PlaySongOnShow_HappyFlow_ResultIsFailed()
         {
 
             int showId = 1;
@@ -157,7 +157,7 @@ namespace Backend_core_unit_tests
             Assert.False(result.IsFailed);
         }
         [Fact]
-        public void PlaySongOnShow_NoShow()
+        public void PlaySongOnShow_NoShow_AWarningIsReturnedAboutShows()
         {
 
             int showId = 1;
@@ -183,7 +183,7 @@ namespace Backend_core_unit_tests
             Assert.True(result.IsFailed);
         }
         [Fact]
-        public void PlaySongOnShow_NoSong()
+        public void PlaySongOnShow_NoSong_AWarningIsReturnedAboutSong()
         {
 
             int showId = 1;
@@ -210,7 +210,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void PostSong_HappyFlow()
+        public void PostSong_HappyFlow_ResultIsNotFailed()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
@@ -240,7 +240,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void PostSong_Noshow()
+        public void PostSong_Noshow_AWarningIsReturnedAboutShows()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
@@ -272,7 +272,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void PostSong_ErrorShow()
+        public void PostSong_ErrorShow_ShowDoesNotExistResultFailed()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
@@ -303,7 +303,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void PostSong_NoAritist()
+        public void PostSong_NoAritist_ResultWarningAboutArtist()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
@@ -335,7 +335,7 @@ namespace Backend_core_unit_tests
         }
 
         [Fact]
-        public void PostSong_ErrorAritist()
+        public void PostSong_ErrorAritist_ResultErrorAboutArtist()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
@@ -366,7 +366,7 @@ namespace Backend_core_unit_tests
             Assert.False(result.IsFailedWarning);
         }
         [Fact]
-        public void PostSong_Warning()
+        public void PostSong_Warning_ResultWarningNoError()
         {
             A.CallTo(() => artistRepository.DoesArtistExist(A<int>._)).Returns(
                new Result<bool>
