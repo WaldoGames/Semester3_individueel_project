@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class User_contact
+    public partial class User_contact
     {
         [Key]
         public int Id { get; set; }
@@ -18,16 +18,16 @@ namespace Backend_DAL.Models
 
         // Navigation property
         [ForeignKey("firstUserId")]
-        public User firstUser { get; set; }
+        public virtual User firstUser { get; set; }
 
         public int secondUserId { get; set; }
 
         // Navigation property
         [ForeignKey("secondUserId")]
         
-        public User secondUser { get; set; }
+        public virtual User secondUser { get; set; }
     }
-    enum requestStatus
+    public enum requestStatus
     {
         pending=0, accepted=1, rejected=2, suspended=3
     }

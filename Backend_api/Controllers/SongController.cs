@@ -22,6 +22,7 @@ namespace Backend_api.Controllers
 
 
         [HttpGet]
+        [Route("/fromshow")]
         public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
         {
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
@@ -58,7 +59,7 @@ namespace Backend_api.Controllers
 
                 var songs = SongsList.Data.Songs
                   .Select(a => new { key = a.Id, Name = a.name, LastPlayed = a.LastPlayed, AmountPlayed = a.AmountPlayed })
-                  .ToList();
+                  .ToList().OrderByDescending(s=>s.LastPlayed).ThenBy(s=>s.Name);
 
                 return Ok(songs);
             }
@@ -68,6 +69,25 @@ namespace Backend_api.Controllers
                 // Optionally, you can return a generic error response
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetSongById([FromRoute(Name ="id")]int songId)
+        {
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            NullableResult<SongDto> song = SongService.GetSongById(songId);
+
+            if (song.IsFailed)
+            {
+                return BadRequest();
+            }
+            if (song.IsEmpty)
+            {
+                return NotFound();
+            }
+            return Ok(song.Data);
+
         }
 
         [HttpPost]

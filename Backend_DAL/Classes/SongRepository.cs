@@ -2,6 +2,7 @@
 using Backend_core.DTO;
 using Backend_core.Interfaces;
 using Backend_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,13 +56,24 @@ namespace Backend_DAL.Classes
             }
         }
 
+        public NullableResult<SongDto> GetSong(int songId)
+        {
+            Song? song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == songId).FirstOrDefault();
+
+            if(song == null)
+            {
+                return new NullableResult<SongDto>() { };
+            }
+            return new NullableResult<SongDto>() { Data = new SongDto { name = song.name, Artists = song.Artists.Select(item => new ArtistDto(item.Id, item.name)).ToList(), Id = song.Id, Release_date = song.Release_date } };
+        }
+
         public Result<SongsDto> GetSongsUsedByShow(int showId)
         {
             try
             {
                 List<Song> songs;
-                songs = context.Songs.Where(s => s.Shows.Select(sp => sp.Show.Id).Contains(showId)).ToList();
-
+                songs = context.Songs.Include(s=>s.Artists).Where(s => s.Shows.Select(sp => sp.Show.Id).Contains(showId)).ToList();
+                //context.Entry(course).Reference(c => c.Department).Load();
                 SongsDto returnValue = new SongsDto();
 
                 foreach (Song song in songs)
@@ -70,7 +82,14 @@ namespace Backend_DAL.Classes
                     int amountPlayed = context.Show_Song_Playeds.Where(s => s.show.Id == showId && s.song.Id == song.Id).Count(); 
                     DateTime lastPlayed = context.Show_Song_Playeds.Where(s => s.show.Id == showId && s.song.Id == song.Id).Select(s=>s.timePlayed).OrderByDescending(s=>s).FirstOrDefault();
 
-                    returnValue.Songs.Add(new SongWithLastPlayedDto { Id = song.Id, User_description = information, name = song.name, Release_date = song.Release_date, AmountPlayed = amountPlayed, LastPlayed = lastPlayed });
+                    List<ArtistDto> artists = new List<ArtistDto>();
+
+                    foreach (Artist item in song.Artists)
+                    {
+                        artists.Add(new ArtistDto { Id = item.Id, name = item.name });
+                    }
+
+                    returnValue.Songs.Add(new SongWithLastPlayedDto { Id = song.Id, User_description = information, name = song.name, Release_date = song.Release_date, AmountPlayed = amountPlayed, LastPlayed = lastPlayed, Artists= artists });
                 }
                 return new Result<SongsDto>() { Data = returnValue};
             }
@@ -90,10 +109,10 @@ namespace Backend_DAL.Classes
                 {
                     name = newSongDto.name,
                     Release_date = newSongDto.Release_date,
-                    Creators = context.Artists.Where(a => newSongDto.CreatorIds.Contains(a.Id)).ToList()
+                    Artists = context.Artists.Where(a => newSongDto.CreatorIds.Contains(a.Id)).ToList()
                 };
 
-                if (newSong.Creators.Count != newSongDto.CreatorIds.Count)
+                if (newSong.Artists.Count != newSongDto.CreatorIds.Count)
                 {
                     result.WarningMessage = "not all given creators where able to be added to a song";
                 }

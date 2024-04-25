@@ -117,5 +117,10 @@ namespace Backend_core.Classes
                 return new SimpleResult() { ErrorMessage = "SongService->PostNewSong " + e.Message };
             }
         }
+
+        public NullableResult<SongDto> GetSongById(int songId)
+        {
+            return songRepository.GetSong(songId);
+        }
     }
 }
