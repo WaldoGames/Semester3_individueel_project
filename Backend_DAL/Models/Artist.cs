@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class Artist
+    public partial class Artist
     {
         public int Id { get; set; }
         public string name { get; set; }
-        public ICollection<Song> songs { get; set; }
+        public virtual ICollection<Song> Songs { get; set; }
     }
 }

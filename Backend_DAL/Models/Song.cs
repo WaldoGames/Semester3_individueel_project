@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class Song
+    public partial class Song
     {
 
         public int Id { get; set; }
@@ -16,10 +16,10 @@ namespace Backend_DAL.Models
         public DateTime Release_date { get; set; }
 
         //public string Information { get; set; }
-        public ICollection<Artist> Creators { get; set; }
+        public virtual ICollection<Artist> Artists { get; set; } = new List<Artist>();
 
-        public ICollection<Show_song_played> SongsPlayed { get; set; }
+        public virtual ICollection<Show_song_played> SongsPlayed { get; set; }
 
-        public ICollection<Show_song> Shows { get; set; }
+        public virtual ICollection<Show_song> Shows { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class RecordingPlaylist
+    public partial class RecordingPlaylist
     {
        
         public int Id { get; set; }
@@ -20,10 +20,10 @@ namespace Backend_DAL.Models
 
         // Navigation property
         [ForeignKey("creatorId")]
-        public User Creator { get; set; }
+        public virtual User Creator { get; set; }
 
-        public ICollection<User> Guests { get; set; }
-        public ICollection<PlaylistItem> PlaylistItems { get; set; }
+        public virtual ICollection<User> Guests { get; set; }
+        public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }
 
     }
 }

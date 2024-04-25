@@ -62,8 +62,8 @@ namespace Backend_api.Controllers
                // var collection = new Dictionary<int, string>();
 
                 var artists = artistlist.Data.Artists
-                   .Select(a => new ArtistResponse { key = a.Id, Name = a.name })
-                   .ToList();
+                   .Select(a => new ArtistResponse { key = a.Id, Name = a.name, playedCount = artistService.GetArtistPlayedCount(a.Id, ShowId).Data })
+                   .ToList().OrderByDescending(a=>a.playedCount);
 
                 return Ok(artists);
             }
@@ -149,6 +149,8 @@ namespace Backend_api.Controllers
         {
             public int key { get; set; }
             public string Name { get; set; }
+
+            public int playedCount { get; set; }
         }
 
     }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class PlaylistItem
+    public partial class PlaylistItem
     {
 
         public int Id { get; set; }
         public string discription { get; set; }
-        public RecordingPlaylist playlist { get; set; }
-        public Song? playlistItemSong { get; set; }
+        public virtual RecordingPlaylist playlist { get; set; }
+        public virtual Song? playlistItemSong { get; set; }
     }
 }

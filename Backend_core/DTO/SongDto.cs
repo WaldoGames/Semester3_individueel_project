@@ -11,7 +11,7 @@ namespace Backend_core.DTO
         public int Id { get; set; }
         public string name { get; set; }
         public DateTime Release_date { get; set; }
-        public List<ArtistDto>? Creators { get; set; }
+        public List<ArtistDto>? Artists { get; set; }
     }
     public class SongWithShowConnectionDto: SongDto
     {

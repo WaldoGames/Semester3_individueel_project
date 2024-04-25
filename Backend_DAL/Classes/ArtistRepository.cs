@@ -85,7 +85,7 @@ namespace Backend_DAL.Classes
         {
             try
             {
-                List<Artist> artists = context.Artists.Where(a=>a.songs.Select(s=>s.Id).Contains(songId)).ToList();
+                List<Artist> artists = context.Artists.Where(a=>a.Songs.Select(s=>s.Id).Contains(songId)).ToList();
 
                 if(!artists.Any()) {
                     return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistFromSong->[ songId: " + songId + "]:" + "no artist found for songId :" + songId };
