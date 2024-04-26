@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Backend_core.DTO
 {
-    public class NewSongDto
+    public class UpdateSongDto
     {
-
+        public int Id { get; set; }
         public string name { get; set; }
         public DateTime Release_date { get; set; }
 
@@ -16,7 +16,5 @@ namespace Backend_core.DTO
 
         public int showId { get; set; }
         public string User_description { get; set; }
-
-
     }
 }

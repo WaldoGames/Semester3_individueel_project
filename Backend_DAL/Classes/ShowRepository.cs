@@ -99,5 +99,16 @@ namespace Backend_DAL.Classes
                 return new NullableResult<ShowDto> { ErrorMessage = "Error from: Dal->ArtistRepository->GetShowById->[ Id: " + showId + "]" };
             }
         }
+
+        public NullableResult<string> GetShowDiscriptionOfSong(int songId, int showId)
+        {
+            string Discription = context.Show_Song.Where(s => s.SongId == songId && s.ShowId == showId).First().Information;
+            if (Discription == null)
+            {
+                return new NullableResult<string>();
+            };
+
+            return new NullableResult<string> { Data = Discription };
+        }
     }
 }
