@@ -122,5 +122,21 @@ namespace Backend_core.Classes
         {
             return songRepository.GetSong(songId);
         }
+        public NullableResult<SongWithShowConnectionDto> AddInformationToSongDto(SongDto songDto, int ShowId)
+        {
+            SongWithShowConnectionDto newDto = new SongWithShowConnectionDto { Id=songDto.Id, Artists=songDto.Artists, name=songDto.name, Release_date=songDto.Release_date };
+
+            newDto.User_description = showRepository.GetShowDiscriptionOfSong(songDto.Id, ShowId).Data;
+
+            if (newDto.User_description == null)
+            {
+                return new NullableResult<SongWithShowConnectionDto>();
+            }
+            return new NullableResult<SongWithShowConnectionDto> { Data = newDto };
+        }
+        public SimpleResult UpdateSong(UpdateSongDto updateSongDto)
+        {
+            return songRepository.UpdateSong(updateSongDto);
+        }
     }
 }

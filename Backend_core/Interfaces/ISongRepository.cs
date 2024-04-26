@@ -17,6 +17,7 @@ namespace Backend_core.Interfaces
 
         public SimpleResult AddSongToShow(NewSongDto newSongDto, int songId);
         public SimpleResult AddSongToShow(NewShowSongConnectionDto newSongDto);
+        public SimpleResult UpdateSong(UpdateSongDto newSongDto);
 
         public NullableResult<SongDto> GetSong(int songId);
 

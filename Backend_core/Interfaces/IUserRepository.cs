@@ -12,5 +12,6 @@ namespace Backend_core.Interfaces
     {
         Result<bool> DoesUserExist(string auth_sub);
         SimpleResult AddNewUser(NewUserDto newUser);
+
     }
 }

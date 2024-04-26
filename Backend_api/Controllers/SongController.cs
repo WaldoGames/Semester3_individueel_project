@@ -1,6 +1,7 @@
 ﻿using Backend_core.Classes;
 using Backend_core.DTO;
 using Backend_DAL.Classes;
+using Backend_DAL.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -9,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Backend_api.Controllers
@@ -22,7 +24,7 @@ namespace Backend_api.Controllers
 
 
         [HttpGet]
-        [Route("/fromshow")]
+        [Route("fromshow")]
         public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
         {
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
@@ -76,7 +78,9 @@ namespace Backend_api.Controllers
         public IActionResult GetSongById([FromRoute(Name ="id")]int songId)
         {
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+
             NullableResult<SongDto> song = SongService.GetSongById(songId);
+
 
             if (song.IsFailed)
             {
@@ -90,13 +94,54 @@ namespace Backend_api.Controllers
 
         }
 
+        [HttpGet]
+        [Route("{id}/show/{showId}")]
+        public IActionResult GetSongByIdWithShowConnection([FromRoute(Name = "id")] int songId, [FromRoute(Name = "showId")] int showId)
+        {
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            NullableResult<SongDto> song = SongService.GetSongById(songId);
+
+            if (song.IsFailed) return BadRequest();
+            
+            if (song.IsEmpty) return NotFound();
+            
+            NullableResult<SongWithShowConnectionDto> ShowSong = SongService.AddInformationToSongDto(song.Data, showId);
+
+            if (ShowSong.IsFailed) return BadRequest();
+            
+            if (ShowSong.IsEmpty) return NotFound();
+            
+            return Ok(ShowSong.Data);
+
+        }
         [HttpPost]
+
         public IActionResult AddNewSong(NewSongDto NewSong)
         {
 
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
 
             SimpleResult result = SongService.PostNewSong(NewSong);
+
+            if (result.IsFailedError)
+            {
+                return BadRequest();
+            }
+            if (result.IsFailedWarning)
+            {
+                return BadRequest(result.WarningMessage);
+            }
+            return Ok();
+
+        }
+        [HttpPut]
+
+        public IActionResult UpdateSong(UpdateSongDto NewSong)
+        {
+
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+
+            SimpleResult result = SongService.UpdateSong(NewSong);
 
             if (result.IsFailedError)
             {

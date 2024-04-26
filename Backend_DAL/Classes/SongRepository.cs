@@ -151,5 +151,44 @@ namespace Backend_DAL.Classes
                 return new SimpleResult() { ErrorMessage = "Dal->SongRepository->PostPlayedSong error:" + e.Message };
             }
         }
+
+        public SimpleResult UpdateSong(UpdateSongDto UpdateSongDto)
+        {
+            try
+            {
+                Song song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == UpdateSongDto.Id).First();
+                song.Artists.Clear();
+
+                if (UpdateSongDto.CreatorIds != null && UpdateSongDto.CreatorIds.Any())
+                {
+                    foreach (var artistId in UpdateSongDto.CreatorIds)
+                    {
+                        var artist = context.Artists.Find(artistId);
+                        if (artist != null)
+                        {
+                            // Check if the relationship already exists
+                            if (!song.Artists.Any(a => a.Id == artistId))
+                            {
+                                // Add the artist to the song's artists
+                                song.Artists.Add(artist);
+                            }
+                        }
+                    }
+                }
+
+                //song.Artists = context.Artists.Where(a => UpdateSongDto.CreatorIds.Contains(a.Id)).ToList();
+                song.Release_date = UpdateSongDto.Release_date;
+                song.name = UpdateSongDto.name;
+
+                Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).First();
+                show_song.Information = UpdateSongDto.User_description;
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage ="SongRepository->Updatesong: "+e.Message };
+            }
+        }
     }
 }

@@ -10,6 +10,11 @@ namespace Backend_DAL.Models
     {
         public int Id { get; set; }
 
+        public int ShowId { get; set; }
+
+        public int SongId { get; set; }
+
+
         public virtual Show Show { get; set; }
         public virtual Song Song { get; set; }
 
