@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class MusicAppContext : DbContext
+    public class MusicAppContext : DbContext
     {
-        public string DbPath { get; }
-
         public MusicAppContext() : base()
         {
 
+        }
+        public MusicAppContext(DbContextOptions<MusicAppContext> options) : base(options)
+        {
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

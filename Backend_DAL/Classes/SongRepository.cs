@@ -15,6 +15,15 @@ namespace Backend_DAL.Classes
     {
         readonly MusicAppContext context = new MusicAppContext();
 
+        public SongRepository()
+        {
+            context = new MusicAppContext();
+        }
+        public SongRepository(MusicAppContext context)
+        {
+            this.context = context;
+        }
+
         public SimpleResult AddSongToShow(NewSongDto newSongDto,int songId)
         {
             return AddSongToShow(new NewShowSongConnectionDto { showId = newSongDto.showId, User_description= newSongDto.User_description, songId=songId });
@@ -157,31 +166,31 @@ namespace Backend_DAL.Classes
             try
             {
                 Song song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == UpdateSongDto.Id).First();
-                song.Artists.Clear();
-
-                if (UpdateSongDto.CreatorIds != null && UpdateSongDto.CreatorIds.Any())
+                if (UpdateSongDto.CreatorIds==null || UpdateSongDto.CreatorIds.Count > 0)
                 {
-                    foreach (var artistId in UpdateSongDto.CreatorIds)
+                    song.Artists.Clear();
+
+                    if (UpdateSongDto.CreatorIds != null && UpdateSongDto.CreatorIds.Any())
                     {
-                        var artist = context.Artists.Find(artistId);
-                        if (artist != null)
+                        foreach (var artistId in UpdateSongDto.CreatorIds)
                         {
-                            // Check if the relationship already exists
-                            if (!song.Artists.Any(a => a.Id == artistId))
+                            var artist = context.Artists.Find(artistId);
+                            if (artist != null)
                             {
-                                // Add the artist to the song's artists
-                                song.Artists.Add(artist);
+                                if (!song.Artists.Any(a => a.Id == artistId))
+                                {
+                                    song.Artists.Add(artist);
+                                }
                             }
                         }
                     }
                 }
+                
+                if(UpdateSongDto.Release_date == DateTime.MinValue) song.Release_date = UpdateSongDto.Release_date;
+                if (UpdateSongDto.name != null)  song.name = UpdateSongDto.name;
 
-                //song.Artists = context.Artists.Where(a => UpdateSongDto.CreatorIds.Contains(a.Id)).ToList();
-                song.Release_date = UpdateSongDto.Release_date;
-                song.name = UpdateSongDto.name;
-
-                Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).First();
-                show_song.Information = UpdateSongDto.User_description;
+                Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).FirstOrDefault();
+                if (show_song!=null && show_song.Information != null)  show_song.Information = UpdateSongDto.User_description;
                 context.SaveChanges();
                 return new SimpleResult();
             }

@@ -42,8 +42,6 @@ namespace Backend_core.Classes
 
             int count = songs.Data.Songs.Where(s => s.Artists.Select(c => c.Id).Contains(artistId)).Sum(s => s.AmountPlayed);
 
-
-
             return new Result<int> { Data = count };
 
         }

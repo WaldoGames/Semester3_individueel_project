@@ -12,7 +12,7 @@ namespace Backend_core.DTO
         public string name { get; set; }
         public DateTime Release_date { get; set; }
 
-        public List<int> CreatorIds { get; set; }
+        public ICollection<int> CreatorIds { get; set; } = new List<int>();
 
         public int showId { get; set; }
         public string User_description { get; set; }
