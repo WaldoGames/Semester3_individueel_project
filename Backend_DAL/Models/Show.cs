@@ -22,6 +22,8 @@ namespace Backend_DAL.Models
 
         public virtual ICollection<User> hosts { get; set; }
 
+        public virtual ICollection<RecordingPlaylist> CreatedPlaylists { get; set; }
+
 
     }
 }

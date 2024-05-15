@@ -33,7 +33,6 @@ namespace Backend_api.Controllers
                 Result<ArtistsDto> artistlist = artistService.getArtistsUsedInShow(ShowId);
                 if (artistlist.IsFailed)
                 {
-                    // Create the response message with an appropriate status code and error message
                     if (artistlist.IsFailedError)
                     {
                         var response = new
@@ -52,14 +51,9 @@ namespace Backend_api.Controllers
                             StatusCode = HttpStatusCode.BadRequest,
                             Message = artistlist.WarningMessage
                         };
-
-                    // Return BadRequest with the error message
                     return BadRequest(response);
                     }
                 }
-
-                
-               // var collection = new Dictionary<int, string>();
 
                 var artists = artistlist.Data.Artists
                    .Select(a => new ArtistResponse { key = a.Id, Name = a.name, playedCount = artistService.GetArtistPlayedCount(a.Id, ShowId).Data })
@@ -69,8 +63,6 @@ namespace Backend_api.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
-                // Optionally, you can return a generic error response
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
         }

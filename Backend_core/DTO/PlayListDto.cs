@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend_core.DTO
 {
-    internal class PlayListDto
+    public class PlayListDto
     {
         public int Id { get; set; }
 
@@ -15,6 +15,6 @@ namespace Backend_core.DTO
 
         public int creatorId { get; set; }
 
-        PlayListItemDto items { get; set; }
+        public List<PlayListItemDto> items { get; set; }
     }
 }

@@ -17,9 +17,13 @@ namespace Backend_core.Classes
             this.playlistRepository = playlistRepository;
         }
 
-        public Result<PlayListDto> GetPlaylist(int playlistId)
+        public NullableResult<PlayListDto> GetPlaylist(int playlistId)
         {
-
+            return playlistRepository.getPlaylist(playlistId);
+        }
+        public Result<PlaylistOverviewDto> GetPlaylists(int showId)
+        {
+            return playlistRepository.getPlaylistsOverview(showId);
         }
 
         public SimpleResult CreatePlaylist(NewPlaylistDto newPlaylist)

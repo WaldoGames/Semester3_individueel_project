@@ -2,6 +2,7 @@
 using Backend_core.DTO;
 using Backend_core.Interfaces;
 using Backend_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,14 @@ namespace Backend_DAL.Classes
             RecordingPlaylist recordingPlaylist = new RecordingPlaylist();
 
             recordingPlaylist.recordingPlayListName = newPlaylistDTO.recordingPlayListName;
-            User? u = context.Users.Where(u => u.Id == newPlaylistDTO.creatorId).FirstOrDefault();
+            Show? u = context.Shows.Where(u => u.Id == newPlaylistDTO.creatorId).FirstOrDefault();
 
             if (u == null)
             {
-                return new Result<int> { WarningMessage = "User doesn't exist" };
+                return new Result<int> { WarningMessage = "show doesn't exist" };
             }
 
-            recordingPlaylist.User = u;
+            recordingPlaylist.Show = u;
 
             context.Recordings.Add(recordingPlaylist);
             context.SaveChanges();
@@ -67,6 +68,59 @@ namespace Backend_DAL.Classes
             catch (Exception e)
             {
                 return new SimpleResult { ErrorMessage="PlaylistRepository->createPlaylistItem error: " + e.Message };
+            }
+        }
+
+        public NullableResult<PlayListDto> getPlaylist(int playlistId)
+        {
+            try
+            {
+                RecordingPlaylist? playlist = context.Recordings.Include(p=>p.Show).Include(p => p.PlaylistItems).ThenInclude(u=>u.playlistItemSong).Where(p => p.Id == playlistId).FirstOrDefault();
+                if(playlist == null)
+                {
+                    return new NullableResult<PlayListDto> { WarningMessage = "PlaylistRepository->getPlaylist playlist not found" };
+                }
+
+                List<PlayListItemDto> items = new List<PlayListItemDto>();
+
+                foreach (PlaylistItem item in playlist.PlaylistItems)
+                {
+                    items.Add(new PlayListItemDto { discription = item.discription, Id = item.Id, orderIndex = item.orderIndex, playlistId = item.playlist.Id, playlistItemSongId = item.playlistItemSong?.Id });
+                }
+                return new NullableResult<PlayListDto> { Data = new PlayListDto
+                {
+                    Id = playlist.Id,
+                    creatorId = playlist.Show.Id,
+                    recordingPlayListName = playlist.recordingPlayListName,
+                    items = items 
+                }
+                };
+            }
+            catch (Exception e)
+            {
+                return new NullableResult<PlayListDto> { ErrorMessage = "PlaylistRepository->getPlaylist error: " + e.Message };
+            }
+        }
+
+        public Result<PlaylistOverviewDto> getPlaylistsOverview(int showId)
+        {
+            try
+            {
+                List<RecordingPlaylist> playlist = context.Recordings.Include(p => p.Show).Include(p => p.PlaylistItems).ThenInclude(u => u.playlistItemSong).Where(p => p.Show.Id == showId).ToList();
+
+                PlaylistOverviewDto overviewDtos = new PlaylistOverviewDto ();
+                overviewDtos.playListItems = new List<PlaylistOverviewDtoItem>();
+
+                foreach (RecordingPlaylist item in playlist)
+                {
+                    overviewDtos.playListItems.Add(new PlaylistOverviewDtoItem { playListName = item.recordingPlayListName, playListId = item.Id });
+                }
+                return new Result<PlaylistOverviewDto> { Data= overviewDtos };
+            }
+            
+            catch (Exception e)
+            {
+                return new Result<PlaylistOverviewDto> { ErrorMessage = "PlaylistRepository->getPlaylistsOverview error: " + e.Message };
             }
         }
 
