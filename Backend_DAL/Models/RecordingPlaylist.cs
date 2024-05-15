@@ -15,7 +15,7 @@ namespace Backend_DAL.Models
 
         public string recordingPlayListName { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual Show Show { get; set; }
 
         public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }
 

@@ -25,7 +25,7 @@ namespace Backend_DAL.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecordingPlaylist>()
-                .HasOne(rp => rp.User)
+                .HasOne(rp => rp.Show)
                 .WithMany(u => u.CreatedPlaylists)
                 .OnDelete(DeleteBehavior.Restrict); // or use DeleteBehavior.Cascade if appropriate
 
