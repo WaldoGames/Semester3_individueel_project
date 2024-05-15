@@ -19,7 +19,6 @@ namespace Backend_DAL.Models
         public virtual ICollection<RecordingPlaylist> CreatedPlaylists { get; set; }
 
         // Navigation property for playlists where the user is a guest
-        public virtual ICollection<RecordingPlaylist> RecordingGuests { get; set; }
 
         public virtual ICollection<Show> Shows { get; set; }
         public virtual ICollection<User_contact> RequestsSendt { get; set; }
