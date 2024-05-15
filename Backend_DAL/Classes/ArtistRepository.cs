@@ -13,7 +13,7 @@ namespace Backend_DAL.Classes
 {
     public class ArtistRepository : IArtistRepository
     {
-         readonly MusicAppContext context;
+        readonly MusicAppContext context;
 
         public ArtistRepository()
         {

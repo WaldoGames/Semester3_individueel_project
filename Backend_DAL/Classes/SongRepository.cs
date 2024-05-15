@@ -186,7 +186,7 @@ namespace Backend_DAL.Classes
                     }
                 }
                 
-                if(UpdateSongDto.Release_date == DateTime.MinValue) song.Release_date = UpdateSongDto.Release_date;
+                if(UpdateSongDto.Release_date != DateTime.MinValue) song.Release_date = UpdateSongDto.Release_date;
                 if (UpdateSongDto.name != null)  song.name = UpdateSongDto.name;
 
                 Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).FirstOrDefault();

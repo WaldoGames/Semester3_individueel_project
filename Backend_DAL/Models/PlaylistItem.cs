@@ -11,6 +11,8 @@ namespace Backend_DAL.Models
     {
 
         public int Id { get; set; }
+
+        public int orderIndex { get; set; }
         public string discription { get; set; }
         public virtual RecordingPlaylist playlist { get; set; }
         public virtual Song? playlistItemSong { get; set; }
