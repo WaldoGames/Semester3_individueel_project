@@ -13,6 +13,8 @@ namespace Backend_core.DTO
 
         public string recordingPlayListName { get; set; }
 
+        public string playListDescription { get; set; }
+
         public int creatorId { get; set; }
 
         public List<PlayListItemDto> items { get; set; }

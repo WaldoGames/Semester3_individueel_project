@@ -21,7 +21,13 @@ namespace Backend_api.Controllers
     {
         SongService SongService;
 
-
+        [HttpGet]
+        [Route("tmp")]
+        public IActionResult websocketTestCall([FromQuery(Name = "Message")] string Message)
+        {
+            WebsocketTestService.SendAll(Message);
+            return Ok();
+        }
 
         [HttpGet]
         [Route("fromshow")]
@@ -92,6 +98,63 @@ namespace Backend_api.Controllers
             }
             return Ok(song.Data);
 
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public IActionResult GetSongByPartialName([FromQuery(Name = "search")] string name)
+        {
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            try
+            {
+                Result<SongsSimpleDto> Songs = SongService.getSongSearch(name.ToLower());
+                if (Songs.IsFailed)
+                {
+                    // Create the response message with an appropriate status code and error message
+                    if (Songs.IsFailedError)
+                    {
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = "Error occurred while processing the request."
+                        };
+
+                        // Return BadRequest with the error message
+                        return BadRequest(response);
+                    }
+                    else if (Songs.IsFailedWarning)
+                    {
+                        var response = new
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Message = Songs.WarningMessage
+                        };
+
+                        // Return BadRequest with the error message
+                        return BadRequest(response);
+                    }
+                }
+
+
+                // var collection = new Dictionary<int, string>();
+
+                if (Songs.Data == null || Songs.Data.Songs.Count == 0)
+                {
+                    return Ok();
+                }
+
+                var songs = Songs.Data.Songs
+                   .Select(a => new { id = a.Id, Name = a.name })
+                   .ToList();
+
+                return Ok(songs);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // Optionally, you can return a generic error response
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred.");
+            }
         }
 
         [HttpGet]

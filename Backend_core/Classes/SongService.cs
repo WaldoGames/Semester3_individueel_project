@@ -134,6 +134,19 @@ namespace Backend_core.Classes
             }
             return new NullableResult<SongWithShowConnectionDto> { Data = newDto };
         }
+        public Result<SongsSimpleDto> getSongSearch(string name)
+        {
+
+            Result<SongsSimpleDto> artists = songRepository.GetSongsForSearch(name);
+
+            if (artists.IsFailedError)
+            {
+                return new Result<SongsSimpleDto> { ErrorMessage = "core->SongService->getSongSearch error taken from songRepository->GetSongForSearch" };
+            }
+
+            return new Result<SongsSimpleDto> { Data = artists.Data };
+
+        }
         public SimpleResult UpdateSong(UpdateSongDto updateSongDto)
         {
             return songRepository.UpdateSong(updateSongDto);

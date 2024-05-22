@@ -76,6 +76,33 @@ namespace Backend_DAL.Classes
             return new NullableResult<SongDto>() { Data = new SongDto { name = song.name, Artists = song.Artists.Select(item => new ArtistDto(item.Id, item.name)).ToList(), Id = song.Id, Release_date = song.Release_date } };
         }
 
+        public Result<SongsSimpleDto> GetSongsForSearch(string name)
+        {
+            try
+            {
+                List<Song> songs = context.Songs.Where(a => a.name.Contains(name)).Take(5).ToList();
+
+                if (!songs.Any())
+                {
+                    return new Result<SongsSimpleDto> { Data = new SongsSimpleDto() };
+                }
+
+                SongsSimpleDto songsDto = new SongsSimpleDto();
+
+                songs.ForEach(delegate (Song song)
+                {
+                    songsDto.Songs.Add(new SongDto() { Id = song.Id, name = song.name  });
+                });
+
+                return new Result<SongsSimpleDto> { Data = songsDto };
+
+            }
+            catch (Exception e)
+            {
+                return new Result<SongsSimpleDto> { ErrorMessage = "Dal->SongRepository->GetSongsForSearch: " + e.Message };
+            }
+        }
+
         public Result<SongsDto> GetSongsUsedByShow(int showId)
         {
             try
