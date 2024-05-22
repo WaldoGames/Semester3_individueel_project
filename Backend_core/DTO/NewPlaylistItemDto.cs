@@ -9,7 +9,7 @@ namespace Backend_core.DTO
     public class NewPlaylistItemDto
     {
         public int orderIndex { get; set; }
-        public string discription { get; set; }
+        public string description { get; set; }
         public int? playlistId { get; set; }
         public int? playlistItemSongId { get; set; }
         public bool HasSong { get { if (playlistItemSongId == null) { return false; } else return true; } }

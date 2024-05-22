@@ -29,7 +29,8 @@ namespace Backend_DAL.Classes
             RecordingPlaylist recordingPlaylist = new RecordingPlaylist();
 
             recordingPlaylist.recordingPlayListName = newPlaylistDTO.recordingPlayListName;
-            Show? u = context.Shows.Where(u => u.Id == newPlaylistDTO.creatorId).FirstOrDefault();
+            recordingPlaylist.playListDescription = newPlaylistDTO.playListDescription;
+            Show? u = context.Shows.Where(u => u.Id == newPlaylistDTO.ShowId).FirstOrDefault();
 
             if (u == null)
             {
@@ -57,7 +58,7 @@ namespace Backend_DAL.Classes
                 }
 
                 playlistItem.playlist = p;
-                playlistItem.discription = newPlaylistItemDto.discription;
+                playlistItem.discription = newPlaylistItemDto.description;
                 playlistItem.orderIndex = newPlaylistItemDto.orderIndex;
                 playlistItem.playlistItemSong = context.Songs.Where(s => s.Id == newPlaylistItemDto.playlistItemSongId).FirstOrDefault();
 

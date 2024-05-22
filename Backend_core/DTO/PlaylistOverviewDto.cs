@@ -14,6 +14,8 @@ namespace Backend_core.DTO
     public class PlaylistOverviewDtoItem
     {
         public string playListName { get; set; }
+
+        public string playListDescription { get; set; }
         public int playListId { get; set; }
 
     }
