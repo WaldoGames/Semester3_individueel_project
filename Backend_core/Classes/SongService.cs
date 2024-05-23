@@ -137,6 +137,7 @@ namespace Backend_core.Classes
         public Result<SongsSimpleDto> getSongSearch(string name)
         {
 
+
             Result<SongsSimpleDto> artists = songRepository.GetSongsForSearch(name);
 
             if (artists.IsFailedError)

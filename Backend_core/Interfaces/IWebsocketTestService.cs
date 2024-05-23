@@ -9,8 +9,7 @@ namespace Backend_core.Interfaces
 {
     public interface IWebsocketTestService
     {
-        public void addTestSockets(WebSocket TS);
-        public void removeTestSockets(WebSocket TS);
+        public Task SendAll(string message);
 
     }
 }

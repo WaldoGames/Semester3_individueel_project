@@ -49,7 +49,6 @@ namespace Backend_core_unit_tests.IntegrationTests
 
             Assert.True(result.IsFailedError);
 
-            //Assert.False(result.IsFailed);
         }
         [Fact]
         public void AddNewArtist_Happyflow_AddsNewArtist()
