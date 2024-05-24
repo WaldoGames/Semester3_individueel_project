@@ -11,8 +11,22 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
+
+/*builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST")
+                .AllowCredentials();
+        });
+});*/
 
 var app = builder.Build();
+
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 // Configure the HTTP request pipeline.
@@ -22,17 +36,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
+app.UseRouting();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.UseWebSockets();
 
-
-
-app.Map("/ws", async context =>
+/*app.Map("/wsC", async context =>
 {
 
 
@@ -61,6 +75,9 @@ app.Map("/ws", async context =>
     {
         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
     }
-});
-
-await app.RunAsync();
+});*/
+    
+app.MapControllers();
+app.MapHub<WebsocketTestService>("/wsHub");
+    
+app.Run();
