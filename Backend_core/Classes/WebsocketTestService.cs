@@ -1,4 +1,6 @@
 ﻿using Backend_core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,41 +10,27 @@ using System.Threading.Tasks;
 
 namespace Backend_core.Classes
 {
-    public static class WebsocketTestService
+    public class WebsocketTestService: Hub
     {
-        static List<WebSocket> testSockets = new List<WebSocket>();
-
-        public static void addTestSockets(WebSocket TS)
-        {
-            testSockets.Add((WebSocket)TS);
-        }
-        public static void removeTestSockets(WebSocket TS) 
-        {
-            testSockets.Remove((WebSocket)TS);
-        }
-
         // send a message to all open sockets
-        public static async Task SendAll(string message)
+        public async Task SendMessage(string group, string message)
         {
             try
             {
-                List<WebSocket> webSocketList;
-                lock (testSockets) webSocketList = testSockets;
-
-                byte[] byteMessage = Encoding.UTF8.GetBytes(message);
-
-                webSocketList.ForEach(f =>
-                {
-                    if (f.State == WebSocketState.Open)
-                    {
-                        f.SendAsync(new ArraySegment<byte>(byteMessage), WebSocketMessageType.Text, true, CancellationToken.None);
-                    }
-                });
+                await Clients.Group(group).SendAsync("ReceiveMessage", message);
             }
             catch (Exception)
             {
                 // log exp
             }
+        }
+        public Task JoinRoom(string GroupId)
+        {
+            return Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
+        }
+        public Task LeaveRoom(string GroupId)
+        {
+            return Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupId);
         }
 
     }

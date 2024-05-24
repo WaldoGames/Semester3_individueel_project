@@ -25,7 +25,7 @@ namespace Backend_api.Controllers
         [Route("tmp")]
         public IActionResult websocketTestCall([FromQuery(Name = "Message")] string Message)
         {
-            WebsocketTestService.SendAll(Message);
+
             return Ok();
         }
 
