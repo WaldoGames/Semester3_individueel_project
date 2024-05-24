@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class Show_song
+    public partial class Show_song
     {
         public int Id { get; set; }
 
-        public Show Show { get; set; }
-        public Song Song { get; set; }
+        public int ShowId { get; set; }
+
+        public int SongId { get; set; }
+
+
+        public virtual Show Show { get; set; }
+        public virtual Song Song { get; set; }
 
         public string Information { get; set; }
 

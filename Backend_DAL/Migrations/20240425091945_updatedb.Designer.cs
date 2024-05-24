@@ -4,6 +4,7 @@ using Backend_DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_DAL.Migrations
 {
     [DbContext(typeof(MusicAppContext))]
-    partial class MusicAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240425091945_updatedb")]
+    partial class updatedb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,9 +69,6 @@ namespace Backend_DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("orderIndex")
-                        .HasColumnType("int");
-
                     b.Property<int>("playlistId")
                         .HasColumnType("int");
 
@@ -92,12 +92,8 @@ namespace Backend_DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ShowId")
+                    b.Property<int>("creatorId")
                         .HasColumnType("int");
-
-                    b.Property<string>("playListDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("recordingPlayListName")
                         .IsRequired()
@@ -105,7 +101,7 @@ namespace Backend_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShowId");
+                    b.HasIndex("creatorId");
 
                     b.ToTable("Recordings");
                 });
@@ -255,6 +251,21 @@ namespace Backend_DAL.Migrations
                     b.ToTable("User_Contacts");
                 });
 
+            modelBuilder.Entity("RecordingPlaylistUser", b =>
+                {
+                    b.Property<int>("GuestsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecordingGuestsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GuestsId", "RecordingGuestsId");
+
+                    b.HasIndex("RecordingGuestsId");
+
+                    b.ToTable("RecordingPlaylistUser");
+                });
+
             modelBuilder.Entity("ShowUser", b =>
                 {
                     b.Property<int>("ShowsId")
@@ -304,13 +315,13 @@ namespace Backend_DAL.Migrations
 
             modelBuilder.Entity("Backend_DAL.Models.RecordingPlaylist", b =>
                 {
-                    b.HasOne("Backend_DAL.Models.Show", "Show")
+                    b.HasOne("Backend_DAL.Models.User", "Creator")
                         .WithMany("CreatedPlaylists")
-                        .HasForeignKey("ShowId")
+                        .HasForeignKey("creatorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Show");
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Backend_DAL.Models.Show_song", b =>
@@ -370,6 +381,21 @@ namespace Backend_DAL.Migrations
                     b.Navigation("secondUser");
                 });
 
+            modelBuilder.Entity("RecordingPlaylistUser", b =>
+                {
+                    b.HasOne("Backend_DAL.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("GuestsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend_DAL.Models.RecordingPlaylist", null)
+                        .WithMany()
+                        .HasForeignKey("RecordingGuestsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ShowUser", b =>
                 {
                     b.HasOne("Backend_DAL.Models.Show", null)
@@ -392,8 +418,6 @@ namespace Backend_DAL.Migrations
 
             modelBuilder.Entity("Backend_DAL.Models.Show", b =>
                 {
-                    b.Navigation("CreatedPlaylists");
-
                     b.Navigation("Songs");
 
                     b.Navigation("show_Songs");
@@ -408,6 +432,8 @@ namespace Backend_DAL.Migrations
 
             modelBuilder.Entity("Backend_DAL.Models.User", b =>
                 {
+                    b.Navigation("CreatedPlaylists");
+
                     b.Navigation("RequestReceived");
 
                     b.Navigation("RequestsSendt");

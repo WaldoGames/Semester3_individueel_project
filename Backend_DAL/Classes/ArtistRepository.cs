@@ -2,6 +2,7 @@
 using Backend_core.DTO;
 using Backend_core.Interfaces;
 using Backend_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,16 @@ namespace Backend_DAL.Classes
 {
     public class ArtistRepository : IArtistRepository
     {
-         readonly MusicAppContext context = new MusicAppContext();
+        readonly MusicAppContext context;
+
+        public ArtistRepository()
+        {
+            context = new MusicAppContext();
+        }
+        public ArtistRepository(MusicAppContext context)
+        {
+            this.context = context;
+        }
 
         public SimpleResult AddNewArtist(NewArtistDto newArtist)
         {
@@ -32,7 +42,6 @@ namespace Backend_DAL.Classes
             {
                 return new SimpleResult() { ErrorMessage = "Dal->ArtistRepository->AddNewArtist " + e.Message };
             }
-
         }
 
         public Result<bool> DoesArtistExist(int artistId)
@@ -62,7 +71,7 @@ namespace Backend_DAL.Classes
 
                 if (!artists.Any())
                 {
-                    return new Result<ArtistsDto> {};
+                    return new Result<ArtistsDto> { Data = new ArtistsDto()};
                 }
 
                 ArtistsDto artistsDto = new ArtistsDto();
@@ -85,10 +94,10 @@ namespace Backend_DAL.Classes
         {
             try
             {
-                List<Artist> artists = context.Artists.Where(a=>a.songs.Select(s=>s.Id).Contains(songId)).ToList();
+                List<Artist> artists = context.Artists.Where(a=>a.Songs.Select(s=>s.Id).Contains(songId)).ToList();
 
                 if(!artists.Any()) {
-                    return new Result<ArtistsDto> { ErrorMessage = "Dal->ArtistRepository->GetArtistFromSong->[ songId: " + songId + "]:" + "no artist found for songId :" + songId };
+                    return new Result<ArtistsDto> { WarningMessage = "Dal->ArtistRepository->GetArtistFromSong->[ songId: " + songId + "]:" + "no artist found for songId :" + songId };
                 }
 
                 ArtistsDto artistsDto = new ArtistsDto();
@@ -140,7 +149,30 @@ namespace Backend_DAL.Classes
         }
         public SimpleResult RemoveArtist(int artistId)
         {
-            throw new NotImplementedException();
+            Result<bool> result = DoesArtistExist(artistId);
+
+            if (result.IsFailed) return result;
+            if (result.Data == false)
+            {
+                return new SimpleResult { WarningMessage = "ArtistRepository->RemoveArtist Artist doesn't exist" };
+            }
+
+            try
+            {
+                var entityToDelete = context.Artists.Find(artistId); // Replace id with the ID of the entity you want to delete
+
+                if (entityToDelete != null)
+                {
+                    context.Artists.Remove(entityToDelete);
+                    context.SaveChanges();
+                }
+                return new SimpleResult { };
+            }
+            catch (Exception e)
+            {
+
+                return new SimpleResult { ErrorMessage = "ArtistRepository->RemoveArtist Error: "+ e.Message };
+            }
         }
 
         public SimpleResult UpdateArtist(int artistId, UpdateArtistDto updateArtist)

@@ -2,6 +2,7 @@
 using Backend_core.DTO;
 using Backend_core.Interfaces;
 using Backend_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,15 @@ namespace Backend_DAL.Classes
     public class SongRepository : ISongRepository
     {
         readonly MusicAppContext context = new MusicAppContext();
+
+        public SongRepository()
+        {
+            context = new MusicAppContext();
+        }
+        public SongRepository(MusicAppContext context)
+        {
+            this.context = context;
+        }
 
         public SimpleResult AddSongToShow(NewSongDto newSongDto,int songId)
         {
@@ -55,13 +65,51 @@ namespace Backend_DAL.Classes
             }
         }
 
+        public NullableResult<SongDto> GetSong(int songId)
+        {
+            Song? song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == songId).FirstOrDefault();
+
+            if(song == null)
+            {
+                return new NullableResult<SongDto>() { };
+            }
+            return new NullableResult<SongDto>() { Data = new SongDto { name = song.name, Artists = song.Artists.Select(item => new ArtistDto(item.Id, item.name)).ToList(), Id = song.Id, Release_date = song.Release_date } };
+        }
+
+        public Result<SongsSimpleDto> GetSongsForSearch(string name)
+        {
+            try
+            {
+                List<Song> songs = context.Songs.Where(a => a.name.Contains(name)).Take(5).ToList();
+
+                if (!songs.Any())
+                {
+                    return new Result<SongsSimpleDto> { Data = new SongsSimpleDto() };
+                }
+
+                SongsSimpleDto songsDto = new SongsSimpleDto();
+
+                songs.ForEach(delegate (Song song)
+                {
+                    songsDto.Songs.Add(new SongDto() { Id = song.Id, name = song.name  });
+                });
+
+                return new Result<SongsSimpleDto> { Data = songsDto };
+
+            }
+            catch (Exception e)
+            {
+                return new Result<SongsSimpleDto> { ErrorMessage = "Dal->SongRepository->GetSongsForSearch: " + e.Message };
+            }
+        }
+
         public Result<SongsDto> GetSongsUsedByShow(int showId)
         {
             try
             {
                 List<Song> songs;
-                songs = context.Songs.Where(s => s.Shows.Select(sp => sp.Show.Id).Contains(showId)).ToList();
-
+                songs = context.Songs.Include(s=>s.Artists).Where(s => s.Shows.Select(sp => sp.Show.Id).Contains(showId)).ToList();
+                //context.Entry(course).Reference(c => c.Department).Load();
                 SongsDto returnValue = new SongsDto();
 
                 foreach (Song song in songs)
@@ -70,7 +118,14 @@ namespace Backend_DAL.Classes
                     int amountPlayed = context.Show_Song_Playeds.Where(s => s.show.Id == showId && s.song.Id == song.Id).Count(); 
                     DateTime lastPlayed = context.Show_Song_Playeds.Where(s => s.show.Id == showId && s.song.Id == song.Id).Select(s=>s.timePlayed).OrderByDescending(s=>s).FirstOrDefault();
 
-                    returnValue.Songs.Add(new SongWithLastPlayedDto { Id = song.Id, User_description = information, name = song.name, Release_date = song.Release_date, AmountPlayed = amountPlayed, LastPlayed = lastPlayed });
+                    List<ArtistDto> artists = new List<ArtistDto>();
+
+                    foreach (Artist item in song.Artists)
+                    {
+                        artists.Add(new ArtistDto { Id = item.Id, name = item.name });
+                    }
+
+                    returnValue.Songs.Add(new SongWithLastPlayedDto { Id = song.Id, User_description = information, name = song.name, Release_date = song.Release_date, AmountPlayed = amountPlayed, LastPlayed = lastPlayed, Artists= artists });
                 }
                 return new Result<SongsDto>() { Data = returnValue};
             }
@@ -90,10 +145,10 @@ namespace Backend_DAL.Classes
                 {
                     name = newSongDto.name,
                     Release_date = newSongDto.Release_date,
-                    Creators = context.Artists.Where(a => newSongDto.CreatorIds.Contains(a.Id)).ToList()
+                    Artists = context.Artists.Where(a => newSongDto.CreatorIds.Contains(a.Id)).ToList()
                 };
 
-                if (newSong.Creators.Count != newSongDto.CreatorIds.Count)
+                if (newSong.Artists.Count != newSongDto.CreatorIds.Count)
                 {
                     result.WarningMessage = "not all given creators where able to be added to a song";
                 }
@@ -130,6 +185,45 @@ namespace Backend_DAL.Classes
             catch (Exception e)
             {
                 return new SimpleResult() { ErrorMessage = "Dal->SongRepository->PostPlayedSong error:" + e.Message };
+            }
+        }
+
+        public SimpleResult UpdateSong(UpdateSongDto UpdateSongDto)
+        {
+            try
+            {
+                Song song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == UpdateSongDto.Id).First();
+                if (UpdateSongDto.CreatorIds==null || UpdateSongDto.CreatorIds.Count > 0)
+                {
+                    song.Artists.Clear();
+
+                    if (UpdateSongDto.CreatorIds != null && UpdateSongDto.CreatorIds.Any())
+                    {
+                        foreach (var artistId in UpdateSongDto.CreatorIds)
+                        {
+                            var artist = context.Artists.Find(artistId);
+                            if (artist != null)
+                            {
+                                if (!song.Artists.Any(a => a.Id == artistId))
+                                {
+                                    song.Artists.Add(artist);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if(UpdateSongDto.Release_date != DateTime.MinValue) song.Release_date = UpdateSongDto.Release_date;
+                if (UpdateSongDto.name != null)  song.name = UpdateSongDto.name;
+
+                Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).FirstOrDefault();
+                if (show_song!=null && show_song.Information != null)  show_song.Information = UpdateSongDto.User_description;
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage ="SongRepository->Updatesong: "+e.Message };
             }
         }
     }

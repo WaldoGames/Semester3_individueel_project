@@ -117,5 +117,39 @@ namespace Backend_core.Classes
                 return new SimpleResult() { ErrorMessage = "SongService->PostNewSong " + e.Message };
             }
         }
+
+        public NullableResult<SongDto> GetSongById(int songId)
+        {
+            return songRepository.GetSong(songId);
+        }
+        public NullableResult<SongWithShowConnectionDto> AddInformationToSongDto(SongDto songDto, int ShowId)
+        {
+            SongWithShowConnectionDto newDto = new SongWithShowConnectionDto { Id=songDto.Id, Artists=songDto.Artists, name=songDto.name, Release_date=songDto.Release_date };
+
+            newDto.User_description = showRepository.GetShowDiscriptionOfSong(songDto.Id, ShowId).Data;
+
+            if (newDto.User_description == null)
+            {
+                return new NullableResult<SongWithShowConnectionDto>();
+            }
+            return new NullableResult<SongWithShowConnectionDto> { Data = newDto };
+        }
+        public Result<SongsSimpleDto> getSongSearch(string name)
+        {
+
+            Result<SongsSimpleDto> artists = songRepository.GetSongsForSearch(name);
+
+            if (artists.IsFailedError)
+            {
+                return new Result<SongsSimpleDto> { ErrorMessage = "core->SongService->getSongSearch error taken from songRepository->GetSongForSearch" };
+            }
+
+            return new Result<SongsSimpleDto> { Data = artists.Data };
+
+        }
+        public SimpleResult UpdateSong(UpdateSongDto updateSongDto)
+        {
+            return songRepository.UpdateSong(updateSongDto);
+        }
     }
 }

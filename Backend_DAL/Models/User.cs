@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class User
+    public partial class User
     {
 
         public int Id { get; set; }
@@ -16,14 +16,12 @@ namespace Backend_DAL.Models
 
 
         // Navigation property for playlists created by the user
-        public ICollection<RecordingPlaylist> CreatedPlaylists { get; set; }
 
         // Navigation property for playlists where the user is a guest
-        public ICollection<RecordingPlaylist> RecordingGuests { get; set; }
 
-        public ICollection<Show> Shows { get; set; }
-        public ICollection<User_contact> RequestsSendt { get; set; }
-        public ICollection<User_contact> RequestReceived { get; set; }
+        public virtual ICollection<Show> Shows { get; set; }
+        public virtual ICollection<User_contact> RequestsSendt { get; set; }
+        public virtual ICollection<User_contact> RequestReceived { get; set; }
 
 
     }

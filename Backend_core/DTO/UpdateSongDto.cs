@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Backend_core.DTO
 {
-    public class NewSongDto
+    public class UpdateSongDto
     {
-
+        public int Id { get; set; }
         public string name { get; set; }
         public DateTime Release_date { get; set; }
 
-        public ICollection<int> CreatorIds { get; set; } = new List<int>();
+        public List<int> CreatorIds { get; set; }
 
         public int showId { get; set; }
         public string User_description { get; set; }
-
-
     }
 }

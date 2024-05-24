@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 
 namespace Backend_DAL.Models
 {
-    internal class MusicAppContext : DbContext
+    public class MusicAppContext : DbContext
     {
-        public string DbPath { get; }
-
         public MusicAppContext() : base()
         {
 
+        }
+        public MusicAppContext(DbContextOptions<MusicAppContext> options) : base(options)
+        {
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlServer(@$"Server=sql_server_container;Database=Backend_DAL;User Id=SA;Password=Pass-Sql-Word-14434-AAA#A;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");//, builder => { builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null); });
         //Server=sql_server_container;Database=Backend_DAL;User Id=SA;Password=Pass-Sql-Word-14434-AAA#A;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-
+        //localhost, 1433
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RecordingPlaylist>()
-                .HasOne(rp => rp.Creator)
+                .HasOne(rp => rp.Show)
                 .WithMany(u => u.CreatedPlaylists)
-                .HasForeignKey(rp => rp.creatorId)
                 .OnDelete(DeleteBehavior.Restrict); // or use DeleteBehavior.Cascade if appropriate
-           
+
             modelBuilder.Entity<User>()
                 .HasMany(rp => rp.RequestsSendt)
-                .WithOne(u=>u.firstUser)
+                .WithOne(u => u.firstUser)
                 .HasForeignKey(rp => rp.firstUserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -41,10 +41,13 @@ namespace Backend_DAL.Models
                 .HasForeignKey(rp => rp.secondUserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<RecordingPlaylist>()
-                .HasMany(rp => rp.Guests)
-                .WithMany(u => u.RecordingGuests);
+            /*modelBuilder.Entity<Song>()
+                .HasMany(s => s.Artists)
+                .WithMany(a=>a.Songs)*/
+                
         }
+                
+        
 
         public DbSet<Artist> Artists { get; set; }
         public DbSet<PlaylistItem> PlaylistItems { get; set; }

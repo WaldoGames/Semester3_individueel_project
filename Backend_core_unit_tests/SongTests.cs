@@ -45,15 +45,13 @@ namespace Backend_core_unit_tests
                     Data = new SongsDto
                     {
                         Songs = new List<SongWithLastPlayedDto> { new SongWithLastPlayedDto { Id = 0, Release_date = DateTime.Now, name = "songiguess",
-                            Creators = new List<ArtistDto> { new ArtistDto { Id = 2, name = "bob" }, doubleArtist } },
+                            Artists = new List<ArtistDto> { new ArtistDto { Id = 2, name = "bob" }, doubleArtist } },
 
                                 new SongWithLastPlayedDto { Id = 0, Release_date = DateTime.Now, name = "song2guess",
-                            Creators = new List<ArtistDto> { new ArtistDto { Id = 2, name = "henk" }, doubleArtist } }
+                            Artists = new List<ArtistDto> { new ArtistDto { Id = 2, name = "henk" }, doubleArtist } }
                         }
-
                     }
                 }
-
            );
 
             Result<SongsDto> result= service.GetSongsUsedInShow(showId);
@@ -81,10 +79,10 @@ namespace Backend_core_unit_tests
                     Data = new SongsDto
                     {
                         Songs = new List<SongWithLastPlayedDto> { new SongWithLastPlayedDto { Id = 0, Release_date = DateTime.Now, name = "songiguess",
-                            Creators = new List<ArtistDto> { new ArtistDto { Id = 2, name = "bob" }, doubleArtist } },
+                            Artists = new List<ArtistDto> { new ArtistDto { Id = 2, name = "bob" }, doubleArtist } },
 
                                 new SongWithLastPlayedDto { Id = 0, Release_date = DateTime.Now, name = "song2guess",
-                            Creators = new List<ArtistDto> { new ArtistDto { Id = 2, name = "henk" }, doubleArtist } }
+                            Artists = new List<ArtistDto> { new ArtistDto { Id = 2, name = "henk" }, doubleArtist } }
                         }
 
                     }
