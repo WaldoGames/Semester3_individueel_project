@@ -432,6 +432,80 @@ namespace Backend_core_unit_tests
 
         }
 
+        [Fact]
+        public void getArtistsSearch_happyflow_Get3Artists()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<ArtistDto> artists = new List<ArtistDto>
+            {
+                af.GenerateFakeArtist("jeff"), af.GenerateFakeArtist("jeffy"),af.GenerateFakeArtist("jeffsi"),
+            };
+            ArtistsDto dto = new ArtistsDto
+            {
+                Artists = artists
+            };
+
+            A.CallTo(() => artistRepository.GetArtistsForSearch("jeff")).Returns(
+                new Result<ArtistsDto>
+                {
+                    Data = dto,
+                }
+            );
+
+            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+
+            Assert.False(result.IsFailed);
+            Assert.Equal(3, result.Data.Artists.Count);
+        }
+        [Fact]
+        public void getArtistsSearch_NoAristsfound_Get0Artists()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<ArtistDto> artists = new List<ArtistDto>
+            {
+                //af.GenerateFakeArtist("jeff"), af.GenerateFakeArtist("jeffy"),af.GenerateFakeArtist("jeffsi"),
+            };
+            ArtistsDto dto = new ArtistsDto
+            {
+                Artists = artists
+            };
+
+            A.CallTo(() => artistRepository.GetArtistsForSearch("jeff")).Returns(
+                new Result<ArtistsDto>
+                {
+                    Data = dto,
+                }
+            );
+
+            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+
+            Assert.False(result.IsFailed);
+            Assert.Empty( result.Data.Artists);
+        }
+        [Fact]
+        public void getArtistsSearch_Error_IsFailed()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<ArtistDto> artists = new List<ArtistDto>
+            {
+                af.GenerateFakeArtist("jeff"), af.GenerateFakeArtist("jeffy"),af.GenerateFakeArtist("jeffsi"),
+            };
+            ArtistsDto dto = new ArtistsDto
+            {
+                Artists = artists
+            };
+
+            A.CallTo(() => artistRepository.GetArtistsForSearch("jeff")).Returns(
+                new Result<ArtistsDto>
+                {
+                    ErrorMessage="isFailedError"
+                }
+            );
+
+            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+
+            Assert.True(result.IsFailed);
+        }
 
     }
 }

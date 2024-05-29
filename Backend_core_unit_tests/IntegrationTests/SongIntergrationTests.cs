@@ -62,7 +62,7 @@ namespace Backend_core_unit_tests.IntegrationTests
             Assert.Single(context.Show_Song_Playeds);
         }
         [Fact]
-        public void PostPlayedSong_InvalidIds_SongPlayAdded()
+        public void PostPlayedSong_InvalidIds_IsFailedErrorAndEmptyIds()
         {
             Assert.Empty(context.Show_Song_Playeds);
             SimpleResult result = s.PostPlayedSong(new PlaySongDto { showId = 1897, songId = 1987 });

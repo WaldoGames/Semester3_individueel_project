@@ -126,11 +126,17 @@ namespace Backend_core.Classes
         {
             SongWithShowConnectionDto newDto = new SongWithShowConnectionDto { Id=songDto.Id, Artists=songDto.Artists, name=songDto.name, Release_date=songDto.Release_date };
 
-            newDto.User_description = showRepository.GetShowDiscriptionOfSong(songDto.Id, ShowId).Data;
+            NullableResult<string> result = showRepository.GetShowDiscriptionOfSong(songDto.Id, ShowId);
 
-            if (newDto.User_description == null)
+            if (result.IsFailed)
             {
-                return new NullableResult<SongWithShowConnectionDto>();
+                if (result.IsFailedError) return new NullableResult<SongWithShowConnectionDto> { ErrorMessage = result.ErrorMessage };
+                return new NullableResult<SongWithShowConnectionDto> { WarningMessage = result.WarningMessage };
+            }
+
+            if (result.Data != null)
+            {
+                newDto.User_description = result.Data;
             }
             return new NullableResult<SongWithShowConnectionDto> { Data = newDto };
         }
@@ -138,14 +144,14 @@ namespace Backend_core.Classes
         {
 
 
-            Result<SongsSimpleDto> artists = songRepository.GetSongsForSearch(name);
+            Result<SongsSimpleDto> songs = songRepository.GetSongsForSearch(name);
 
-            if (artists.IsFailedError)
+            if (songs.IsFailedError)
             {
                 return new Result<SongsSimpleDto> { ErrorMessage = "core->SongService->getSongSearch error taken from songRepository->GetSongForSearch" };
             }
 
-            return new Result<SongsSimpleDto> { Data = artists.Data };
+            return new Result<SongsSimpleDto> { Data = songs.Data };
 
         }
         public SimpleResult UpdateSong(UpdateSongDto updateSongDto)

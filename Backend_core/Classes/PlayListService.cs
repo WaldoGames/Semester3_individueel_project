@@ -27,7 +27,7 @@ namespace Backend_core.Classes
         }
 
         public SimpleResult CreatePlaylist(NewPlaylistDto newPlaylist)
-        {      
+        {
             Result<int> result = playlistRepository.createPlaylist(newPlaylist);
 
             if (result.IsFailed)

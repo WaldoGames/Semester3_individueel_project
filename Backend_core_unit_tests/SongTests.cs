@@ -1,6 +1,7 @@
 ﻿using Backend_core.Classes;
 using Backend_core.DTO;
 using Backend_core.Interfaces;
+using Backend_core_unit_tests.Factory;
 using FakeItEasy;
 using FakeItEasy.Configuration;
 using System;
@@ -393,6 +394,172 @@ namespace Backend_core_unit_tests
 
             Assert.True(result.IsFailedWarning);
             Assert.False(result.IsFailedError);
+        }
+
+        [Fact]
+        public void getSongSearch_happyflow_Get3Songs()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<SongDto> songs = new List<SongDto>
+            {
+                new SongDto{ name="song1", Id=1, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff") } },
+                new SongDto{ name="song2", Id=2, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff2") } },
+                new SongDto{ name="song3", Id=3, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff3") } }
+
+            };
+            SongsSimpleDto dto = new SongsSimpleDto
+            {
+                Songs = songs
+            };
+
+            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+                new Result<SongsSimpleDto>
+                {
+                    Data = dto,
+                }
+            );
+
+            Result<SongsSimpleDto> result = service.getSongSearch("song");
+
+            Assert.False(result.IsFailed);
+            Assert.Equal(3, result.Data.Songs.Count);
+        }
+        [Fact]
+        public void getSongSearch_NoSongfound_Get0Songs()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<SongDto> songs = new List<SongDto>
+            {
+
+            };
+            SongsSimpleDto dto = new SongsSimpleDto
+            {
+                Songs = songs
+            };
+
+            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+                new Result<SongsSimpleDto>
+                {
+                    Data = dto,
+                }
+            );
+
+            Result<SongsSimpleDto> result = service.getSongSearch("song");
+
+            Assert.False(result.IsFailed);
+            Assert.Empty(result.Data.Songs);
+        }
+        [Fact]
+        public void getSongSearch_Error_IsFailed()
+        {
+            ArtistFactory af = new ArtistFactory();
+            List<SongDto> songs = new List<SongDto>
+            {
+                new SongDto{ name="song1", Id=1, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff") } },
+                new SongDto{ name="song2", Id=2, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff2") } },
+                new SongDto{ name="song3", Id=3, Release_date=DateTime.Now, Artists= new List<ArtistDto>{ af.GenerateFakeArtist("jeff3") } }
+
+            };
+            SongsSimpleDto dto = new SongsSimpleDto
+            {
+                Songs = songs
+            };
+
+            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+                new Result<SongsSimpleDto>
+                {
+                    ErrorMessage="IsFailed"
+                }
+            );
+
+            Result<SongsSimpleDto> result = service.getSongSearch("song");
+
+            Assert.True(result.IsFailed);
+            
+        }
+
+        [Fact]
+        public void AddInformationToSongDto_happyflow_GetSongWithShowConnectionUserDiscriptionDto()
+        {
+            ArtistFactory af = new ArtistFactory();
+
+
+
+            SongDto newDto = new SongDto { 
+                Id = 342, 
+                Artists = [ af.GenerateFakeArtist("jeff") ], 
+                name = "WEEEE", 
+                Release_date = DateTime.Now };
+
+            A.CallTo(() => showRepository.GetShowDiscriptionOfSong(A<int>._, A<int>._)).Returns(
+                new NullableResult<string>
+                {
+                    Data = "added user discription",
+                }
+            );
+
+            NullableResult<SongWithShowConnectionDto> result = service.AddInformationToSongDto(newDto, 1);
+
+            Assert.False(result.IsFailed);
+            Assert.Equal("WEEEE", result.Data.name);
+            Assert.Equal("added user discription", result.Data.User_description);
+        }
+
+        [Fact]
+        public void AddInformationToSongDto_NoDiscription_SongWithoutDiscription()
+        {
+            ArtistFactory af = new ArtistFactory();
+
+
+
+            SongDto newDto = new SongDto
+            {
+                Id = 342,
+                Artists = [af.GenerateFakeArtist("jeff")],
+                name = "WEEEE",
+                Release_date = DateTime.Now
+            };
+
+            A.CallTo(() => showRepository.GetShowDiscriptionOfSong(A<int>._, A<int>._)).Returns(
+                new NullableResult<string>
+                {
+                
+                }
+            );
+
+            NullableResult<SongWithShowConnectionDto> result = service.AddInformationToSongDto(newDto, 1);
+
+            Assert.False(result.IsFailed);
+            Assert.Equal("WEEEE", result.Data.name);
+            Assert.Null(result.Data.User_description);
+        }
+
+        [Fact]
+        public void AddInformationToSongDto_ErrorGetShowDiscriptionOfSong_IsFailed()
+        {
+            ArtistFactory af = new ArtistFactory();
+
+
+
+            SongDto newDto = new SongDto
+            {
+                Id = 342,
+                Artists = [af.GenerateFakeArtist("jeff")],
+                name = "WEEEE",
+                Release_date = DateTime.Now
+            };
+
+            A.CallTo(() => showRepository.GetShowDiscriptionOfSong(A<int>._, A<int>._)).Returns(
+                new NullableResult<string>
+                {
+                    ErrorMessage="error"
+                }
+            );
+
+            NullableResult<SongWithShowConnectionDto> result = service.AddInformationToSongDto(newDto, 1);
+
+            Assert.False(result.IsFailedWarning);
+            Assert.True(result.IsFailedError);
         }
     }
 }
