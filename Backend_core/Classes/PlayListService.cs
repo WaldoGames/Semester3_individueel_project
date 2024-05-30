@@ -54,6 +54,13 @@ namespace Backend_core.Classes
             return playlistRepository.updatePlaylist(updatePlaylist);
         }
 
+        public SimpleResult RemovePlaylist(int playlistId)
+        {
+            return playlistRepository.removePlaylist(playlistId);
+        }
+
+        
+
         public void ResetPlayListOrderIndex(List<PlayListItemDto> playlist){
 
             for(int i = 0; i < playlist.Count; i++)

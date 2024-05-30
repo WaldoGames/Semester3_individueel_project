@@ -16,6 +16,8 @@ namespace Backend_core.Interfaces
 
         public SimpleResult updatePlaylist(UpdatePlaylistDto updatePlaylistDTO);
 
+        public SimpleResult removePlaylist(int playlistId);
+
         public NullableResult<PlayListDto> getPlaylist(int playlistId);
         public Result<PlaylistOverviewDto> getPlaylistsOverview(int showId);
     }

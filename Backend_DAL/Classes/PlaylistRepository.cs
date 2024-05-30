@@ -125,6 +125,26 @@ namespace Backend_DAL.Classes
             }
         }
 
+        public SimpleResult removePlaylist(int playlistId)
+        {
+            try
+            {
+                List<PlaylistItem> items = context.PlaylistItems.Include(p => p.playlist).Where(p => p.playlist.Id == playlistId).ToList();
+
+                foreach (PlaylistItem item in items)
+                {
+                    context.Remove(item);
+                }
+                context.Remove(context.Recordings.Where(p => p.Id == playlistId).FirstOrDefault());
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage= "PlaylistRepository->removePlaylist: "+e.Message };
+            }
+        }
+
         public SimpleResult updatePlaylist(UpdatePlaylistDto updatePlaylistDTO)
         {
             throw new NotImplementedException();

@@ -71,6 +71,44 @@ namespace Backend_api.Controllers
             return Ok(playlist.Data);
 
         }
+        [HttpGet]
+        [Route("item/{id}")]
+        public IActionResult GetPlaylistItemById([FromRoute(Name = "id")] int PlaylistId)
+        {
+            playListService = new PlayListService(new PlaylistRepository());
+
+            NullableResult<PlayListDto> playlist = playListService.GetPlaylist(PlaylistId);
+
+
+            if (playlist.IsFailed)
+            {
+                return BadRequest();
+            }
+            if (playlist.IsEmpty)
+            {
+                return NotFound();
+            }
+            return Ok(playlist.Data);
+
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult DeletePlaylistById([FromRoute(Name = "id")] int PlaylistId)
+        {
+            playListService = new PlayListService(new PlaylistRepository());
+
+            SimpleResult result = playListService.RemovePlaylist(PlaylistId);
+
+            //check for warning about show exisiting
+
+            if (result.IsFailed)
+            {
+                return BadRequest();
+            }
+            return Ok();
+
+        }
 
     }
 }
