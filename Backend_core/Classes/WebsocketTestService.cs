@@ -12,17 +12,9 @@ namespace Backend_core.Classes
 {
     public class WebsocketTestService: Hub
     {
-        // send a message to all open sockets
         public async Task SendMessage(string group, string message)
         {
-            try
-            {
-                await Clients.Group(group).SendAsync("ReceiveMessage", message);
-            }
-            catch (Exception)
-            {
-                // log exp
-            }
+            await Clients.Group(group).SendAsync("ReceiveMessage", message);
         }
         public Task JoinRoom(string GroupId)
         {
