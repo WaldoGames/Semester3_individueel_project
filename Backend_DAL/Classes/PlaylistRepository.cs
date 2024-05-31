@@ -93,6 +93,7 @@ namespace Backend_DAL.Classes
                     Id = playlist.Id,
                     creatorId = playlist.Show.Id,
                     recordingPlayListName = playlist.recordingPlayListName,
+                    playListDescription = playlist.playListDescription,
                     items = items 
                 }
                 };

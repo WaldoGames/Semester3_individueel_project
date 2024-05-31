@@ -17,7 +17,7 @@ namespace Backend_api.Controllers
         [HttpPost]
         public IActionResult AddPlaylist(NewPlaylistDto newPlaylist)
         {
-            playListService = new PlayListService(new PlaylistRepository());
+            playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
             SimpleResult result = playListService.CreatePlaylist(newPlaylist);
 
@@ -33,8 +33,8 @@ namespace Backend_api.Controllers
         [HttpGet]
         public IActionResult GetPlaylists([FromQuery(Name = "show")] int ShowId)
         {
-            playListService = new PlayListService(new PlaylistRepository());
-            
+            playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
+
             try
             {
                 Result<PlaylistOverviewDto> playlists = playListService.GetPlaylists(ShowId);
@@ -55,7 +55,7 @@ namespace Backend_api.Controllers
         [Route("{id}")]
         public IActionResult GetPlaylistById([FromRoute(Name = "id")] int PlaylistId)
         {
-            playListService = new PlayListService(new PlaylistRepository());
+            playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
             NullableResult<PlayListDto> playlist = playListService.GetPlaylist(PlaylistId);
 
@@ -75,7 +75,7 @@ namespace Backend_api.Controllers
         [Route("item/{id}")]
         public IActionResult GetPlaylistItemById([FromRoute(Name = "id")] int PlaylistId)
         {
-            playListService = new PlayListService(new PlaylistRepository());
+            playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
             NullableResult<PlayListDto> playlist = playListService.GetPlaylist(PlaylistId);
 
@@ -96,7 +96,7 @@ namespace Backend_api.Controllers
         [Route("{id}")]
         public IActionResult DeletePlaylistById([FromRoute(Name = "id")] int PlaylistId)
         {
-            playListService = new PlayListService(new PlaylistRepository());
+            playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
             SimpleResult result = playListService.RemovePlaylist(PlaylistId);
 

@@ -1,5 +1,6 @@
 using Backend_core.Classes;
 using Backend_core.Interfaces;
+using Backend_DAL.Classes;
 using System.Net;
 using System.Net.WebSockets;
 
@@ -12,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<IPlaylistRepository, PlaylistRepository>();
+builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddScoped<IShowRepository, ShowRepository>();
 
 /*builder.Services.AddCors(options =>
 {
