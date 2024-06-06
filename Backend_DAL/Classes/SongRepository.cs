@@ -76,11 +76,12 @@ namespace Backend_DAL.Classes
             return new NullableResult<SongDto>() { Data = new SongDto { name = song.name, Artists = song.Artists.Select(item => new ArtistDto(item.Id, item.name)).ToList(), Id = song.Id, Release_date = song.Release_date } };
         }
 
-        public Result<SongsSimpleDto> GetSongsForSearch(string name)
+        public Result<SongsSimpleDto> GetSongsForSearch(string name, int showId)
         {
             try
             {
-                List<Song> songs = context.Songs.Where(a => a.name.Contains(name)).Take(5).ToList();
+                List<Song> songs = context.Songs.Where(a => a.name.Contains(name)).ToList();
+                songs = context.Songs.Where(a => context.Show_Song.Where(ss => ss.ShowId == showId).Select(s => s.SongId).Contains(a.Id)).Take(5).ToList();
 
                 if (!songs.Any())
                 {

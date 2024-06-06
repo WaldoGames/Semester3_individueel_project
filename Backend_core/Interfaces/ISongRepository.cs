@@ -15,7 +15,7 @@ namespace Backend_core.Interfaces
         public SimpleResult PostPlayedSong(PlaySongDto songPlayed);
         public Result<int> PostNewSong(NewSongDto newSongDto);
 
-        public Result<SongsSimpleDto> GetSongsForSearch(string name);
+        public Result<SongsSimpleDto> GetSongsForSearch(string name,int showId);
 
         public SimpleResult AddSongToShow(NewSongDto newSongDto, int songId);
         public SimpleResult AddSongToShow(NewShowSongConnectionDto newSongDto);

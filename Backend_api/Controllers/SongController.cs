@@ -101,13 +101,13 @@ namespace Backend_api.Controllers
         }
 
         [HttpGet]
-        [Route("search")]
-        public IActionResult GetSongByPartialName([FromQuery(Name = "search")] string name)
+        [Route("search/{search}/show/{showId}")]
+        public IActionResult GetSongByPartialName([FromRoute(Name = "search")] string name, [FromRoute(Name = "showId")] int showId)
         {
             SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
             try
             {
-                Result<SongsSimpleDto> Songs = SongService.getSongSearch(name.ToLower());
+                Result<SongsSimpleDto> Songs = SongService.getSongSearch(name.ToLower(), showId);
                 if (Songs.IsFailed)
                 {
                     // Create the response message with an appropriate status code and error message
