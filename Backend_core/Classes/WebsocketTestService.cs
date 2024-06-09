@@ -45,6 +45,8 @@ namespace Backend_core.Classes
 
         public Task JoinRoom(string GroupId)
         {
+            
+
             return Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
         }
         public Task LeaveRoom(string GroupId)
