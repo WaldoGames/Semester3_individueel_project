@@ -15,11 +15,14 @@ namespace Backend_core.Classes
         ISongRepository songRepository { get; set; }
         IArtistRepository artistRepository { get; set; }
 
-        public SongService(IShowRepository showRepository, ISongRepository songRepository, IArtistRepository artistRepository)
+        IPlaylistRepository playlistRepository { get; set; }
+
+        public SongService(IShowRepository showRepository, ISongRepository songRepository, IArtistRepository artistRepository, IPlaylistRepository playlistRepository)
         {
             this.showRepository = showRepository;
             this.songRepository = songRepository;
             this.artistRepository = artistRepository;
+            this.playlistRepository = playlistRepository;
         }
 
         public Result<SongsDto> GetSongsUsedInShow(int showId)
@@ -151,6 +154,29 @@ namespace Backend_core.Classes
         public SimpleResult UpdateSong(UpdateSongDto updateSongDto)
         {
             return songRepository.UpdateSong(updateSongDto);
+        }
+
+        public SimpleResult RemoveSong(int SongId)
+        {
+            SimpleResult playListResult = playlistRepository.RemovePlaylistWithSong(SongId);
+            SimpleResult songShowResult = songRepository.RemoveSongShowConnection(SongId);
+
+            if (playListResult.IsFailed)
+            {
+                return playListResult;
+            }
+            if (songShowResult.IsFailed)
+            {
+                return songShowResult;
+            }
+            SimpleResult songResult = songRepository.RemoveSong(SongId);
+
+            if (songResult.IsFailed)
+            {
+                return songResult;
+            }
+            return new SimpleResult();
+
         }
     }
 }

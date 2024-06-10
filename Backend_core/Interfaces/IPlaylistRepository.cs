@@ -10,15 +10,18 @@ namespace Backend_core.Interfaces
 {
     public interface IPlaylistRepository
     {
-        public SimpleResult createPlaylistItem(NewPlaylistItemDto newPlaylistItemDto);
+        public SimpleResult CreatePlaylistItem(NewPlaylistItemDto newPlaylistItemDto);
 
-        public Result<int> createPlaylist(NewPlaylistDto newPlaylistDTO);
+        public Result<int> CreatePlaylist(NewPlaylistDto newPlaylistDTO);
 
-        public SimpleResult updatePlaylist(UpdatePlaylistDto updatePlaylistDTO);
+        public SimpleResult UpdatePlaylist(UpdatePlaylistDto updatePlaylistDTO);
 
-        public SimpleResult removePlaylist(int playlistId);
+        public SimpleResult RemovePlaylist(int playlistId);
 
-        public NullableResult<PlayListDto> getPlaylist(int playlistId);
-        public Result<PlaylistOverviewDto> getPlaylistsOverview(int showId);
+        public SimpleResult RemovePlaylistWithSong(int songId);
+        //RemovePlaylistWithSong
+
+        public NullableResult<PlayListDto> GetPlaylist(int playlistId);
+        public Result<PlaylistOverviewDto> GetPlaylistsOverview(int showId);
     }
 }

@@ -14,15 +14,17 @@ namespace Backend_core.Classes
         ISongRepository SongRepository { get; set; }
         IArtistRepository ArtistRepository { get; set; }
 
+        IPlaylistRepository PlaylistRepository { get; set; }
         SongService SongService { get; set; }
 
-        public ArtistService(IShowRepository showRepository, ISongRepository songRepository, IArtistRepository artistRepository)
+        public ArtistService(IShowRepository showRepository, ISongRepository songRepository, IArtistRepository artistRepository, IPlaylistRepository playlistRepository)
         {
             ShowRepository = showRepository;
             SongRepository = songRepository;
             ArtistRepository = artistRepository;
+            PlaylistRepository = playlistRepository;
 
-            SongService = new SongService(showRepository, songRepository, artistRepository);
+            SongService = new SongService(showRepository, songRepository, artistRepository, playlistRepository);
         }
 
         

@@ -81,7 +81,7 @@ namespace Backend_DAL.Classes
             try
             {
                 List<Song> songs = context.Songs.Where(a => a.name.Contains(name)).ToList();
-                songs = context.Songs.Where(a => context.Show_Song.Where(ss => ss.ShowId == showId).Select(s => s.SongId).Contains(a.Id)).Take(5).ToList();
+                songs = context.Songs.Where(a => context.Show_Song.Where(ss => ss.ShowId == showId ).Select(s => s.SongId).Contains(a.Id) && a.name.Contains(name)).Take(5).ToList();
 
                 if (!songs.Any())
                 {
@@ -186,6 +186,36 @@ namespace Backend_DAL.Classes
             catch (Exception e)
             {
                 return new SimpleResult() { ErrorMessage = "Dal->SongRepository->PostPlayedSong error:" + e.Message };
+            }
+        }
+
+        public SimpleResult RemoveSong(int songId)
+        {
+            try
+            {
+                Song song = context.Songs.Where(p => p.Id == songId).FirstOrDefault();
+                context.Remove(song);
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage = "SongRepository->RemoveSongShowConnection: " + e.Message };
+            }
+        }
+
+        public SimpleResult RemoveSongShowConnection(int songId)
+        {
+            try
+            {
+                Show_song song = context.Show_Song.Where(p => p.SongId == songId).FirstOrDefault();
+                context.Remove(song);
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage = "SongRepository->RemoveSongShowConnection: " + e.Message };
             }
         }
 

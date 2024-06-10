@@ -17,14 +17,16 @@ namespace Backend_core_unit_tests
         private IArtistRepository artistRepository;
         private ISongRepository songRepository;
         private IShowRepository showRepository;
+        private IPlaylistRepository PlaylistRepository;
         public ArtistTests()
         {
             TestVar.test = true;
             artistRepository = A.Fake<IArtistRepository>();
             songRepository = A.Fake<ISongRepository>();
             showRepository = A.Fake<IShowRepository>();
+            PlaylistRepository = A.Fake<IPlaylistRepository>();
 
-            service = new ArtistService(showRepository, songRepository, artistRepository);
+            service = new ArtistService(showRepository, songRepository, artistRepository, PlaylistRepository);
         }
 
         [Fact]

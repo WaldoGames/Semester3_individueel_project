@@ -23,5 +23,8 @@ namespace Backend_core.Interfaces
 
         public NullableResult<SongDto> GetSong(int songId);
 
+        public SimpleResult RemoveSongShowConnection(int songId);
+        public SimpleResult RemoveSong(int songId);
+
     }
 }

@@ -25,18 +25,18 @@ namespace Backend_core.Classes
 
         public NullableResult<PlayListDto> GetPlaylist(int playlistId)
         {
-            return playlistRepository.getPlaylist(playlistId);
+            return playlistRepository.GetPlaylist(playlistId);
         }
         public Result<PlaylistOverviewDto> GetPlaylists(int showId)
         {
-            return playlistRepository.getPlaylistsOverview(showId);
+            return playlistRepository.GetPlaylistsOverview(showId);
         }
 
         public Result<PlaylistStatusDto> WebGetPlaylistStatus(int playlistId, int showId, int index)
         {
             PlaylistStatusDto status = new PlaylistStatusDto();
 
-            NullableResult<PlayListDto> Getplaylistresult = playlistRepository.getPlaylist(playlistId);
+            NullableResult<PlayListDto> Getplaylistresult = playlistRepository.GetPlaylist(playlistId);
             if (Getplaylistresult.IsFailed || Getplaylistresult.IsEmpty)
             {
                 return new Result<PlaylistStatusDto> { ErrorMessage = "playlist services->WebGetPlaylistStatus: error from playlistRepository.getPlaylist()" };
@@ -101,7 +101,7 @@ namespace Backend_core.Classes
 
         public SimpleResult CreatePlaylist(NewPlaylistDto newPlaylist)
         {      
-            Result<int> result = playlistRepository.createPlaylist(newPlaylist);
+            Result<int> result = playlistRepository.CreatePlaylist(newPlaylist);
 
             if (result.IsFailed)
             {
@@ -113,7 +113,7 @@ namespace Backend_core.Classes
             }
             foreach (NewPlaylistItemDto item in newPlaylist.playlistItems)
             {
-                SimpleResult itemResult = playlistRepository.createPlaylistItem(item);
+                SimpleResult itemResult = playlistRepository.CreatePlaylistItem(item);
                 if (itemResult.IsFailed)
                 {
                     return new SimpleResult { ErrorMessage = "an error occured during the creation of the playlist items" };
@@ -124,15 +124,18 @@ namespace Backend_core.Classes
         }
         public SimpleResult UpdatePlaylist(UpdatePlaylistDto updatePlaylist)
         {
-            return playlistRepository.updatePlaylist(updatePlaylist);
+            return playlistRepository.UpdatePlaylist(updatePlaylist);
         }
 
         public SimpleResult RemovePlaylist(int playlistId)
         {
-            return playlistRepository.removePlaylist(playlistId);
+            return playlistRepository.RemovePlaylist(playlistId);
+        }
+        public SimpleResult RemovePlaylistWithSong(int playlistId)
+        {
+            return playlistRepository.RemovePlaylist(playlistId);
         }
 
-        
 
         public void ResetPlayListOrderIndex(List<PlayListItemDto> playlist){
 

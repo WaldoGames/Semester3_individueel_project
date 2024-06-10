@@ -29,11 +29,6 @@ namespace Backend_DAL.Models
                 .WithMany(u => u.CreatedPlaylists)
                 .OnDelete(DeleteBehavior.Restrict); // or use DeleteBehavior.Cascade if appropriate
 
-            modelBuilder.Entity<RecordingPlaylist>()
-               .HasOne(rp => rp.Show)
-               .WithMany(u => u.CreatedPlaylists)
-               .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<User>()
                 .HasMany(rp => rp.RequestsSendt)
                 .WithOne(u => u.firstUser)
@@ -46,10 +41,15 @@ namespace Backend_DAL.Models
                 .HasForeignKey(rp => rp.secondUserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Song>()
+            .HasMany(s=>s.SongsPlayed)
+            .WithOne(u => u.song)
+            .OnDelete(DeleteBehavior.Cascade);
+
             /*modelBuilder.Entity<Song>()
                 .HasMany(s => s.Artists)
                 .WithMany(a=>a.Songs)*/
-                
+
         }
                 
         
