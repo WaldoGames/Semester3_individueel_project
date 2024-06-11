@@ -110,7 +110,7 @@ namespace Backend_core.Classes
 
         public SimpleResult CreatePlaylist(NewPlaylistDto newPlaylist)
         {      
-            Result<int> result = playlistRepository.createPlaylist(newPlaylist);
+            Result<int> result = playlistRepository.CreatePlaylist(newPlaylist);
 
             if (result.IsFailed)
             {

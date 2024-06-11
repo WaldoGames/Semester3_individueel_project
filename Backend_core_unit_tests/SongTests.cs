@@ -2,6 +2,7 @@
 using Backend_core.DTO;
 using Backend_core.Interfaces;
 using Backend_DAL.Classes;
+using Backend_core_unit_tests.Factory;
 using FakeItEasy;
 using FakeItEasy.Configuration;
 using System;
@@ -414,14 +415,14 @@ namespace Backend_core_unit_tests
                 Songs = songs
             };
 
-            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+            A.CallTo(() => songRepository.GetSongsForSearch("song",1)).Returns(
                 new Result<SongsSimpleDto>
                 {
                     Data = dto,
                 }
             );
 
-            Result<SongsSimpleDto> result = service.getSongSearch("song");
+            Result<SongsSimpleDto> result = service.getSongSearch("song",1);
 
             Assert.False(result.IsFailed);
             Assert.Equal(3, result.Data.Songs.Count);
@@ -439,14 +440,14 @@ namespace Backend_core_unit_tests
                 Songs = songs
             };
 
-            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+            A.CallTo(() => songRepository.GetSongsForSearch("song",1)).Returns(
                 new Result<SongsSimpleDto>
                 {
                     Data = dto,
                 }
             );
 
-            Result<SongsSimpleDto> result = service.getSongSearch("song");
+            Result<SongsSimpleDto> result = service.getSongSearch("song",1);
 
             Assert.False(result.IsFailed);
             Assert.Empty(result.Data.Songs);
@@ -467,14 +468,14 @@ namespace Backend_core_unit_tests
                 Songs = songs
             };
 
-            A.CallTo(() => songRepository.GetSongsForSearch("song")).Returns(
+            A.CallTo(() => songRepository.GetSongsForSearch("song",1)).Returns(
                 new Result<SongsSimpleDto>
                 {
                     ErrorMessage="IsFailed"
                 }
             );
 
-            Result<SongsSimpleDto> result = service.getSongSearch("song");
+            Result<SongsSimpleDto> result = service.getSongSearch("song",1);
 
             Assert.True(result.IsFailed);
             
