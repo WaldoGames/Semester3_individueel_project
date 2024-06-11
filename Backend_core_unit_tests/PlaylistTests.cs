@@ -1,7 +1,8 @@
 ﻿using Backend_core.Classes;
 using Backend_core.DTO;
 using Backend_core.Interfaces;
-using Backend_core_unit_tests.Factory;
+using Backend_DAL.Classes;
+using Backend_DAL.Models;
 using FakeItEasy;
 using System;
 using System.Collections.Generic;
@@ -15,155 +16,167 @@ namespace Backend_core_unit_tests
     {
         private PlayListService service;
         private IPlaylistRepository playlistRepository;
-
         public PlaylistTests()
         {
             TestVar.test = true;
             playlistRepository = A.Fake<IPlaylistRepository>();
-            service = new PlayListService(playlistRepository);
         }
 
         [Fact]
-        public void CreatePlaylist_happyflow_PlaylistCreated()
         {
-            NewPlaylistDto dto = new NewPlaylistDto
-            {
-                playListDescription = "testPlaylist",
-                recordingPlayListName = "playlist",
-                ShowId = 1,
-                playlistItems = new List<NewPlaylistItemDto>
-                {
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 1,
-                        description = "first item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 2,
-                        description = "second item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 3,
-                        description = "third item",
-                        playlistItemSongId = 1,
-                    },
-                }
-            };
-
-            A.CallTo(() => playlistRepository.createPlaylist(A<NewPlaylistDto>._)).Returns(
-                new Result<int>
-                {
-                    Data = 1,
-                }
+               {
+        {
+               {
+                           },
+                           {
+                           },
+                           {
+                           }
+                       
+               {
+                   }
+               }
             );
-            A.CallTo(() => playlistRepository.createPlaylistItem(A<NewPlaylistItemDto>._)).Returns(
-                new SimpleResult
-                {
-                }
+               {
+                   Data= "this is a good song"
+               }
             );
 
             SimpleResult result = service.CreatePlaylist(dto);
+
+            Result<PlaylistStatusDto> result = service.WebGetPlaylistStatus(1, 1, 0);
+
+            A.CallTo(() => playlistRepository.GetPlaylist(A<int>._)).MustHaveHappened();
 
             Assert.False(result.IsFailed);
-           
         }
         [Fact]
-        public void CreatePlaylist_FailedToCreatePlaylist_IsFailed()
         {
-            NewPlaylistDto dto = new NewPlaylistDto
-            {
-                playListDescription = "testPlaylist",
-                recordingPlayListName = "playlist",
-                ShowId = 1,
-                playlistItems = new List<NewPlaylistItemDto>
-                {
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 1,
-                        description = "first item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 2,
-                        description = "second item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 3,
-                        description = "third item",
-                        playlistItemSongId = 1,
-                    },
-                }
+               {
+                   {
+                           {
+                           },
+                           {
+                           },
+                        {
+                        },
+                       name = "song",
+                       Release_date = new DateTime(2007, 3, 3)
+
+                   }
+               }
+            );
+            A.CallTo(() => showRepository.GetShowDiscriptionOfSong(A<int>._, A<int>._)).Returns(
+               new NullableResult<string>
+               {
+                   Data = "this is a good song"
+               }
+            );
+
+
+            Result<PlaylistStatusDto> result = service.WebGetPlaylistStatus(1, 1, 1);
+
+            A.CallTo(() => playlistRepository.GetPlaylist(A<int>._)).MustHaveHappened();
+
+            Assert.False(result.IsFailed);
+            Assert.False(result.Data.FirstItem);
+            Assert.False(result.Data.LastItem);
+            Assert.Equal("item2", result.Data.currentItem.discription);
+            Assert.NotNull(result.Data.currentItem.song);
+            Assert.Equal("song", result.Data.currentItem.song.name);
+            Assert.Equal("this is a good song", result.Data.currentItem.song.User_description);
+        }
             };
 
-            A.CallTo(() => playlistRepository.createPlaylist(A<NewPlaylistDto>._)).Returns(
-                new Result<int>
-                {
-                    ErrorMessage = "Failed"
-                }
+                           {
+               }
             );
-            A.CallTo(() => playlistRepository.createPlaylistItem(A<NewPlaylistItemDto>._)).Returns(
-                new SimpleResult
-                {
-                }
+                        {
+                            new ArtistDto() {
+                             Id = 1,
+                             name="artist"}
+                        },
+                       name = "song",
+                       Release_date = new DateTime(2007, 3, 3)
+
+                   }
+               }
+            );
+            A.CallTo(() => showRepository.GetShowDiscriptionOfSong(A<int>._, A<int>._)).Returns(
+               new NullableResult<string>
+               {
+                   Data = "this is a good song"
+               }
             );
 
             SimpleResult result = service.CreatePlaylist(dto);
 
-            Assert.EndsWith("Failed", result.ErrorMessage);
             Assert.True(result.IsFailed);
-
         }
 
         [Fact]
-        public void CreatePlaylist_FailedToCreatePlaylistItem_IsFailed()
         {
-            NewPlaylistDto dto = new NewPlaylistDto
-            {
-                playListDescription = "testPlaylist",
-                recordingPlayListName = "playlist",
-                ShowId = 1,
-                playlistItems = new List<NewPlaylistItemDto>
-                {
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 1,
-                        description = "first item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 2,
-                        description = "second item",
-                    },
-                    new NewPlaylistItemDto
-                    {
-                        orderIndex = 3,
-                        description = "third item",
-                        playlistItemSongId = 1,
-                    },
-                }
-            };
+               {
+                   {
+                       {
+                           },
+                           {
+                           },
+                           {
+                        },
+                       name = "song",
+                       Release_date = new DateTime(2007, 3, 3)
 
-            A.CallTo(() => playlistRepository.createPlaylist(A<NewPlaylistDto>._)).Returns(
-                new Result<int>
-                {
-                    Data = 1,
-                }
+                   }
+
+               new Result<int>
+               {
+               }
             );
-            A.CallTo(() => playlistRepository.createPlaylistItem(A<NewPlaylistItemDto>._)).Returns(
-                new SimpleResult
-                {
-                    ErrorMessage="Failed"
-                }
+               new SimpleResult
+               {
+               }
             );
-
-            SimpleResult result = service.CreatePlaylist(dto);
-
-            Assert.Contains("playlist items", result.ErrorMessage);
+            SimpleResult result = service.CreatePlaylist(new NewPlaylistDto { });
             Assert.True(result.IsFailed);
+            Assert.True(result.IsFailedError);
+            Assert.False(result.IsFailedWarning);
+        }
+
+                   
+            Assert.True(result.IsFailed);
+            Assert.True(result.IsFailedError);
+            Assert.False(result.IsFailedWarning);
+        }
+
+        [Fact]
+        public void ResetPlayListOrderIndex_Happyflow_orderedList()
+        {
+            List<PlayListItemDto> playlistItems = new List<PlayListItemDto>
+                {
+                    new PlayListItemDto{
+                        discription="item",
+                        orderIndex=2,
+                        playlistId=1,
+                    },
+                    new PlayListItemDto{
+                        discription="item2",
+                        orderIndex=1,
+                        playlistId=1,
+                    },
+                    new PlayListItemDto{
+                        discription="item3",
+                        orderIndex=0,
+                        playlistId=1,
+                    }
+                };
+            service.ResetPlayListOrderIndex(playlistItems);
+
+            Assert.Equal(0, playlistItems[0].orderIndex);
+            Assert.Equal(1, playlistItems[1].orderIndex);
+            Assert.Equal(2, playlistItems[2].orderIndex);
 
         }
+
     }
 }

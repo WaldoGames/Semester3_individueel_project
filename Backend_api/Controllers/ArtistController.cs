@@ -26,7 +26,7 @@ namespace Backend_api.Controllers
         [HttpGet]
         public IActionResult GetArtists([FromQuery(Name = "show")] int ShowId)
         {
-            artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             try
             {
@@ -70,7 +70,7 @@ namespace Backend_api.Controllers
         [Route("search")]
         public IActionResult GetArtistsByPartialName([FromQuery(Name = "search")] string name)
         {
-            artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            artistService = new ArtistService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             try
             {
@@ -127,7 +127,7 @@ namespace Backend_api.Controllers
         [HttpPost]
         public IActionResult AddArtist(NewArtistDto newArtists)
         {
-            artistService = new ArtistService(new ShowRepository(), new SongRepository(),new ArtistRepository());
+            artistService = new ArtistService(new ShowRepository(), new SongRepository(),new ArtistRepository(), new PlaylistRepository());
 
             SimpleResult result = artistService.addNewArtist(newArtists);
 

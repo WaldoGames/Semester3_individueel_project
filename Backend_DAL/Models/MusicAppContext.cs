@@ -41,10 +41,15 @@ namespace Backend_DAL.Models
                 .HasForeignKey(rp => rp.secondUserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Song>()
+            .HasMany(s=>s.SongsPlayed)
+            .WithOne(u => u.song)
+            .OnDelete(DeleteBehavior.Cascade);
+
             /*modelBuilder.Entity<Song>()
                 .HasMany(s => s.Artists)
                 .WithMany(a=>a.Songs)*/
-                
+
         }
                 
         

@@ -24,7 +24,7 @@ namespace Backend_DAL.Classes
             this.context = context;
         }
 
-        public Result<int> createPlaylist(NewPlaylistDto newPlaylistDTO)
+        public Result<int> CreatePlaylist(NewPlaylistDto newPlaylistDTO)
         {
             RecordingPlaylist recordingPlaylist = new RecordingPlaylist();
 
@@ -44,7 +44,7 @@ namespace Backend_DAL.Classes
             return new Result<int> { Data = recordingPlaylist.Id};
         }
 
-        public SimpleResult createPlaylistItem(NewPlaylistItemDto newPlaylistItemDto)
+        public SimpleResult CreatePlaylistItem(NewPlaylistItemDto newPlaylistItemDto)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public NullableResult<PlayListDto> getPlaylist(int playlistId)
+        public NullableResult<PlayListDto> GetPlaylist(int playlistId)
         {
             try
             {
@@ -93,6 +93,7 @@ namespace Backend_DAL.Classes
                     Id = playlist.Id,
                     creatorId = playlist.Show.Id,
                     recordingPlayListName = playlist.recordingPlayListName,
+                    playListDescription = playlist.playListDescription,
                     items = items 
                 }
                 };
@@ -103,7 +104,7 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public Result<PlaylistOverviewDto> getPlaylistsOverview(int showId)
+        public Result<PlaylistOverviewDto> GetPlaylistsOverview(int showId)
         {
             try
             {
@@ -125,7 +126,53 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public SimpleResult updatePlaylist(UpdatePlaylistDto updatePlaylistDTO)
+        public SimpleResult RemovePlaylist(int playlistId)
+        {
+            try
+            {
+                List<PlaylistItem> items = context.PlaylistItems.Include(p => p.playlist).Where(p => p.playlist.Id == playlistId).ToList();
+
+                foreach (PlaylistItem item in items)
+                {
+                    context.Remove(item);
+                }
+                context.Remove(context.Recordings.Where(p => p.Id == playlistId).FirstOrDefault());
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage= "PlaylistRepository->removePlaylist: "+e.Message };
+            }
+        }
+
+        public SimpleResult RemovePlaylistWithSong(int songId)
+        {
+            try
+            {
+                List<PlaylistItem> items = context.PlaylistItems.Include(p => p.playlist).Where(p => p.playlistItemSong!=null && p.playlistItemSong.Id == songId).ToList();
+                List<int> ids = new List<int>();
+                foreach (PlaylistItem item in items)
+                {
+                    ids.Add(item.playlist.Id);
+                }
+                foreach (int id in ids)
+                {
+                    SimpleResult result = RemovePlaylist(id);
+                    if (result.IsFailed)
+                    {
+                        return result;
+                    }
+                }
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage = "PlaylistRepository->RemovePlaylistWithSong: " + e.Message };
+            }
+        }
+
+        public SimpleResult UpdatePlaylist(UpdatePlaylistDto updatePlaylistDTO)
         {
             throw new NotImplementedException();
         }

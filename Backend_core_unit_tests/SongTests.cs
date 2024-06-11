@@ -1,7 +1,7 @@
 ﻿using Backend_core.Classes;
 using Backend_core.DTO;
 using Backend_core.Interfaces;
-using Backend_core_unit_tests.Factory;
+using Backend_DAL.Classes;
 using FakeItEasy;
 using FakeItEasy.Configuration;
 using System;
@@ -18,13 +18,15 @@ namespace Backend_core_unit_tests
         private ISongRepository songRepository;
         private IShowRepository showRepository;
         private IArtistRepository artistRepository;
+        private IPlaylistRepository playlistRepository;
         public SongTests()
         {
             TestVar.test = true;
             songRepository = A.Fake<ISongRepository>();
             showRepository = A.Fake<IShowRepository>();
             artistRepository = A.Fake<IArtistRepository>();
-            service = new SongService(showRepository, songRepository, artistRepository);
+            playlistRepository = A.Fake<IPlaylistRepository>();
+            service = new SongService(showRepository, songRepository, artistRepository, playlistRepository);
         }
 
         [Fact]

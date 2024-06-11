@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
@@ -33,7 +34,7 @@ namespace Backend_api.Controllers
         [Route("fromshow")]
         public IActionResult GetSongsUsedInShow([FromQuery(Name = "show")] int ShowId)
         {
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             try
             {
@@ -83,7 +84,7 @@ namespace Backend_api.Controllers
         [Route("{id}")]
         public IActionResult GetSongById([FromRoute(Name ="id")]int songId)
         {
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             NullableResult<SongDto> song = SongService.GetSongById(songId);
 
@@ -101,13 +102,13 @@ namespace Backend_api.Controllers
         }
 
         [HttpGet]
-        [Route("search")]
-        public IActionResult GetSongByPartialName([FromQuery(Name = "search")] string name)
+        [Route("search/{search}/show/{showId}")]
+        public IActionResult GetSongByPartialName([FromRoute(Name = "search")] string name, [FromRoute(Name = "showId")] int showId)
         {
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
             try
             {
-                Result<SongsSimpleDto> Songs = SongService.getSongSearch(name.ToLower());
+                Result<SongsSimpleDto> Songs = SongService.getSongSearch(name.ToLower(), showId);
                 if (Songs.IsFailed)
                 {
                     // Create the response message with an appropriate status code and error message
@@ -161,7 +162,7 @@ namespace Backend_api.Controllers
         [Route("{id}/show/{showId}")]
         public IActionResult GetSongByIdWithShowConnection([FromRoute(Name = "id")] int songId, [FromRoute(Name = "showId")] int showId)
         {
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
             NullableResult<SongDto> song = SongService.GetSongById(songId);
 
             if (song.IsFailed) return BadRequest();
@@ -182,7 +183,7 @@ namespace Backend_api.Controllers
         public IActionResult AddNewSong(NewSongDto NewSong)
         {
 
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             SimpleResult result = SongService.PostNewSong(NewSong);
 
@@ -202,7 +203,7 @@ namespace Backend_api.Controllers
         public IActionResult UpdateSong(UpdateSongDto NewSong)
         {
 
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
             SimpleResult result = SongService.UpdateSong(NewSong);
 
@@ -217,15 +218,13 @@ namespace Backend_api.Controllers
             return Ok();
 
         }
-
-        [HttpPost]
-        [Route("played")]
-        public IActionResult PlaySongOnShow(PlaySongDto playSong)
+        [HttpDelete]
+        public IActionResult PlaySongOnShow(int songId)
         {
 
-            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository());
+            SongService = new SongService(new ShowRepository(), new SongRepository(), new ArtistRepository(), new PlaylistRepository());
 
-            SimpleResult result = SongService.PostSongPlayed(playSong);
+            SimpleResult result = SongService.RemoveSong(songId);
 
             if (result.IsFailedError)
             {
