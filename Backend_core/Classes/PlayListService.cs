@@ -34,73 +34,87 @@ namespace Backend_core.Classes
 
         public Result<PlaylistStatusDto> WebGetPlaylistStatus(int playlistId, int showId, int index)
         {
-            PlaylistStatusDto status = new PlaylistStatusDto();
-
-            NullableResult<PlayListDto> Getplaylistresult = playlistRepository.GetPlaylist(playlistId);
-            if (Getplaylistresult.IsFailed || Getplaylistresult.IsEmpty)
+            try
             {
-                return new Result<PlaylistStatusDto> { ErrorMessage = "playlist services->WebGetPlaylistStatus: error from playlistRepository.getPlaylist()" };
-            }
-            if (Getplaylistresult.Data.creatorId != showId)
-            {
-                return new Result<PlaylistStatusDto> { WarningMessage = "playlist services->WebGetPlaylistStatus: error playlist does not belong to user" };
-            }
-            NullableResult<SongDto> songResult;
-            if (Getplaylistresult.Data.items[index].playlistItemSongId != null) {
-                songResult = songRepository.GetSong((int)Getplaylistresult.Data.items[index].playlistItemSongId);
-            }
-            else
-            {
-                songResult = new NullableResult<SongDto>();
-            }
 
-            status.playListDescription = Getplaylistresult.Data.playListDescription;
-            status.recordingPlayListName = Getplaylistresult.Data.recordingPlayListName;
-            if(Getplaylistresult.Data.items.Count > 0) { 
-                status.currentItem = new PlaylistItemStatusDto {
-                    discription = Getplaylistresult.Data.items[index].discription,
-                    itemIndex = index,
-                };
+                PlaylistStatusDto status = new PlaylistStatusDto();
 
-                if (!songResult.IsEmpty)
+                NullableResult<PlayListDto> Getplaylistresult = playlistRepository.GetPlaylist(playlistId);
+                if (Getplaylistresult.IsFailed || Getplaylistresult.IsEmpty)
                 {
-                    status.currentItem.song = new SongWithShowConnectionDto
-                    {
-                        Artists = songResult.Data.Artists,
-                        Id = songResult.Data.Id,
-                        name = songResult.Data.name,
-                        Release_date = songResult.Data.Release_date,
+                    return new Result<PlaylistStatusDto> { ErrorMessage = "playlist services->WebGetPlaylistStatus: error from playlistRepository.getPlaylist()" };
+                }
+                if (Getplaylistresult.Data.creatorId != showId)
+                {
+                    return new Result<PlaylistStatusDto> { WarningMessage = "playlist services->WebGetPlaylistStatus: error playlist does not belong to user" };
+                }
+                NullableResult<SongDto> songResult;
+                if (Getplaylistresult.Data.items[index].playlistItemSongId != null) {
+                    songResult = songRepository.GetSong((int)Getplaylistresult.Data.items[index].playlistItemSongId);
+                }
+                else
+                {
+                    songResult = new NullableResult<SongDto>();
+                }
+
+                status.playListDescription = Getplaylistresult.Data.playListDescription;
+                status.recordingPlayListName = Getplaylistresult.Data.recordingPlayListName;
+                if(Getplaylistresult.Data.items.Count > 0) { 
+                    status.currentItem = new PlaylistItemStatusDto {
+                        discription = Getplaylistresult.Data.items[index].discription,
+                        itemIndex = index,
                     };
-                    NullableResult<string> ShowSongResult = showRepository.GetShowDiscriptionOfSong(songResult.Data.Id, showId);
-                    if (!ShowSongResult.IsEmpty)
+
+                    if (!songResult.IsEmpty)
                     {
-                        status.currentItem.song.User_description = ShowSongResult.Data;
+                        status.currentItem.song = new SongWithShowConnectionDto
+                        {
+                            Artists = songResult.Data.Artists,
+                            Id = songResult.Data.Id,
+                            name = songResult.Data.name,
+                            Release_date = songResult.Data.Release_date,
+                        };
+                        NullableResult<string> ShowSongResult = showRepository.GetShowDiscriptionOfSong(songResult.Data.Id, showId);
+                        if (!ShowSongResult.IsEmpty)
+                        {
+                            status.currentItem.song.User_description = ShowSongResult.Data;
+                        }
                     }
                 }
-            }
-            if (index + 1 >= Getplaylistresult.Data.items.Count)
-            {
-                status.LastItem = true;
-            }
-            else
-            {
-                status.LastItem = false;
-            }
-            if (index == 0)
-            {
-                status.FirstItem = true;
-            }
-            else
-            {
-                status.FirstItem = false;
-            }
+                if (index + 1 >= Getplaylistresult.Data.items.Count)
+                {
+                    status.LastItem = true;
+                }
+                else
+                {
+                    status.LastItem = false;
+                }
+                if (index == 0)
+                {
+                    status.FirstItem = true;
+                }
+                else
+                {
+                    status.FirstItem = false;
+                }
             
 
-            return new Result<PlaylistStatusDto> { Data = status };
+                return new Result<PlaylistStatusDto> { Data = status };
+
+            }
+            catch (Exception e)
+            {
+                return new Result<PlaylistStatusDto> {  ErrorMessage = "playlistService->WebGetPlaylistStatus "+e.Message };
+            }
         }
 
         public SimpleResult CreatePlaylist(NewPlaylistDto newPlaylist)
-        {      
+        {
+            if (newPlaylist.playlistItems == null)
+            {
+                return new SimpleResult { WarningMessage = "item list can't be null"};
+            }
+
             Result<int> result = playlistRepository.CreatePlaylist(newPlaylist);
 
             if (result.IsFailed)
