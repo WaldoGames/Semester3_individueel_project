@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Backend_core.Classes
 {
-    public class WebsocketTestService: Hub
+    public class WebsocketService: Hub
     {
         IPlaylistRepository playlistRepository;
         ISongRepository songRepository;
         IShowRepository showRepository;
 
 
-        public WebsocketTestService(IPlaylistRepository playlistRepository, ISongRepository songRepository, IShowRepository showRepository)
+        public WebsocketService(IPlaylistRepository playlistRepository, ISongRepository songRepository, IShowRepository showRepository)
         {
             this.playlistRepository = playlistRepository;
             this.songRepository = songRepository;
@@ -45,8 +45,6 @@ namespace Backend_core.Classes
 
         public Task JoinRoom(string GroupId)
         {
-            
-
             return Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
         }
         public Task LeaveRoom(string GroupId)

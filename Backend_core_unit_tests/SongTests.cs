@@ -543,7 +543,6 @@ namespace Backend_core_unit_tests
             ArtistFactory af = new ArtistFactory();
 
 
-
             SongDto newDto = new SongDto
             {
                 Id = 342,
@@ -563,6 +562,113 @@ namespace Backend_core_unit_tests
 
             Assert.False(result.IsFailedWarning);
             Assert.True(result.IsFailedError);
+        }
+
+        [Fact]
+        public void RemoveSong_happyflow_IsNotFailed()
+        {
+            A.CallTo(() => playlistRepository.RemovePlaylistWithSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSongShowConnection(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+
+            SimpleResult result = service.RemoveSong(1);
+            Assert.False(result.IsFailed);
+
+        }
+
+        [Fact]
+        public void RemoveSong_RemoveWithPlaylistError_IsFailed()
+        {
+            A.CallTo(() => playlistRepository.RemovePlaylistWithSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+                    ErrorMessage = ""
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSongShowConnection(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+
+            SimpleResult result = service.RemoveSong(1);
+            Assert.True(result.IsFailed);
+
+        }
+        [Fact]
+        public void RemoveSong_RemoveWithSongShowConnectionError_IsFailed()
+        {
+            A.CallTo(() => playlistRepository.RemovePlaylistWithSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSongShowConnection(A<int>._)).Returns(
+                new SimpleResult
+                {
+                    ErrorMessage = ""
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+
+            SimpleResult result = service.RemoveSong(1);
+            Assert.True(result.IsFailed);
+
+        }
+        [Fact]
+        public void RemoveSong_RemoveSongError_IsFailed()
+        {
+            A.CallTo(() => playlistRepository.RemovePlaylistWithSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSongShowConnection(A<int>._)).Returns(
+                new SimpleResult
+                {
+
+                }
+            );
+            A.CallTo(() => songRepository.RemoveSong(A<int>._)).Returns(
+                new SimpleResult
+                {
+                    ErrorMessage = ""
+                }
+            );
+
+            SimpleResult result = service.RemoveSong(1);
+            Assert.True(result.IsFailed);
+
         }
     }
 }

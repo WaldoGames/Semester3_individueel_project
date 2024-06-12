@@ -82,6 +82,6 @@ app.UseWebSockets();
 });*/
     
 app.MapControllers();
-app.MapHub<WebsocketTestService>("/wsHub");
+app.MapHub<WebsocketService>("/wsHub");
     
 app.Run();
