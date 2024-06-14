@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Backend_core.Classes
 {
+    [Authorize]
     public class WebsocketService: Hub
     {
         IPlaylistRepository playlistRepository;
@@ -29,23 +30,28 @@ namespace Backend_core.Classes
             await Clients.Group(group).SendAsync("ReceiveMessage", message);
         }
 
-        public async Task SendCurrentRoomStatus(string GroupId, int playlistId, int showId, int index)
+        public void SendCurrentRoomStatus(string GroupId, int playlistId, int showId, int index)
         {
             PlayListService service = new PlayListService(playlistRepository, songRepository, showRepository);
+
+            var c = Context.ConnectionId;
 
             Result<PlaylistStatusDto> result = service.WebGetPlaylistStatus(playlistId, showId, index);
 
             if (!result.IsFailed)
             {
-                await Clients.Group(GroupId).SendAsync("UpdateCurrentRoomstate", result.Data);
+                Clients.Group(GroupId).SendAsync("UpdateCurrentRoomstate", result.Data);
+                return;
             }
-            await Clients.Group(GroupId).SendAsync("Error", "somethign went wrong with updating room status");
+            Clients.Group(GroupId).SendAsync("Error", "somethign went wrong with updating room status");
 
         }
 
-        public Task JoinRoom(string GroupId)
+        public async Task JoinRoom(string GroupId)
         {
-            return Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
+            //string c = Context.ConnectionId + ";
+            await Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
+            await Clients.Group(GroupId).SendAsync("Host-SendCurrentRoomstate");
         }
         public Task LeaveRoom(string GroupId)
         {
@@ -54,6 +60,19 @@ namespace Backend_core.Classes
         public Task RequestCurrentRoomStatusFromHost(string GroupId)
         {
             return Clients.Group(GroupId).SendAsync("Host-SendCurrentRoomstate");
+        }
+        public void MoveIndex(string GroupId, int amount)
+        {
+            if(amount > 0)
+            {
+                Clients.Group(GroupId).SendAsync("Host-Next", amount);
+            }
+            else if(amount<0)
+            {
+                Clients.Group(GroupId).SendAsync("Host-Previous", amount);
+
+            }
+            
         }
 
     }
