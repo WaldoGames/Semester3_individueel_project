@@ -18,10 +18,10 @@ namespace Backend_core.Classes
             UserRepository = userRepository;
         }
 
-        public SimpleResult RegisterLogin(NewUserDto LoginUser)
+        public SimpleResult RegisterLogin(NewUserDto loginUser)
         {
 
-            Result<bool> checkResult = UserRepository.DoesUserExist(LoginUser.SubId);
+            Result<bool> checkResult = UserRepository.DoesUserExist(loginUser.SubId);
 
             if (checkResult.IsFailed){
                 if(checkResult.IsFailedWarning) return new SimpleResult { WarningMessage = checkResult.WarningMessage };
@@ -33,7 +33,7 @@ namespace Backend_core.Classes
                 return new SimpleResult();
             }
             
-            SimpleResult newUserResult = UserRepository.AddNewUser(LoginUser);
+            SimpleResult newUserResult = UserRepository.AddNewUser(loginUser);
 
             if (newUserResult.IsFailed)
             {

@@ -30,7 +30,7 @@ namespace Backend_api.Controllers
 
             try
             {
-                Result<ArtistsDto> artistlist = artistService.getArtistsUsedInShow(ShowId);
+                Result<ArtistsDto> artistlist = artistService.GetArtistsUsedInShow(ShowId);
                 if (artistlist.IsFailed)
                 {
                     if (artistlist.IsFailedError)
@@ -74,7 +74,7 @@ namespace Backend_api.Controllers
 
             try
             {
-                Result<ArtistsDto> artistlist = artistService.getArtistsSearch(name.ToLower());
+                Result<ArtistsDto> artistlist = artistService.GetArtistsSearch(name.ToLower());
                 if (artistlist.IsFailed)
                 {
                     // Create the response message with an appropriate status code and error message
@@ -129,7 +129,7 @@ namespace Backend_api.Controllers
         {
             artistService = new ArtistService(new ShowRepository(), new SongRepository(),new ArtistRepository(), new PlaylistRepository());
 
-            SimpleResult result = artistService.addNewArtist(newArtists);
+            SimpleResult result = artistService.AddNewArtist(newArtists);
 
             if (result.IsFailedError)
             {

@@ -31,13 +31,13 @@ namespace Backend_api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPlaylists([FromQuery(Name = "show")] int ShowId)
+        public IActionResult GetPlaylists([FromQuery(Name = "show")] int showId)
         {
             playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
             try
             {
-                Result<PlaylistOverviewDto> playlists = playListService.GetPlaylists(ShowId);
+                Result<PlaylistOverviewDto> playlists = playListService.GetPlaylists(showId);
                 if (playlists.IsFailed)
                 {
                     return BadRequest();
@@ -53,11 +53,11 @@ namespace Backend_api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetPlaylistById([FromRoute(Name = "id")] int PlaylistId)
+        public IActionResult GetPlaylistById([FromRoute(Name = "id")] int playlistId)
         {
             playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
-            NullableResult<PlayListDto> playlist = playListService.GetPlaylist(PlaylistId);
+            NullableResult<PlayListDto> playlist = playListService.GetPlaylist(playlistId);
 
 
             if (playlist.IsFailed)
@@ -73,11 +73,11 @@ namespace Backend_api.Controllers
         }
         [HttpGet]
         [Route("item/{id}")]
-        public IActionResult GetPlaylistItemById([FromRoute(Name = "id")] int PlaylistId)
+        public IActionResult GetPlaylistItemById([FromRoute(Name = "id")] int playlistId)
         {
             playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
-            NullableResult<PlayListDto> playlist = playListService.GetPlaylist(PlaylistId);
+            NullableResult<PlayListDto> playlist = playListService.GetPlaylist(playlistId);
 
 
             if (playlist.IsFailed)
@@ -94,11 +94,11 @@ namespace Backend_api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult DeletePlaylistById([FromRoute(Name = "id")] int PlaylistId)
+        public IActionResult DeletePlaylistById([FromRoute(Name = "id")] int playlistId)
         {
             playListService = new PlayListService(new PlaylistRepository(), new SongRepository(), new ShowRepository());
 
-            SimpleResult result = playListService.RemovePlaylist(PlaylistId);
+            SimpleResult result = playListService.RemovePlaylist(playlistId);
 
             //check for warning about show exisiting
 

@@ -41,6 +41,21 @@ namespace Backend_DAL.Classes
             }
         }
 
+        public SimpleResult DeleteShow(int showId)
+        {
+            try
+            {
+                Show show = context.Shows.Where(p => p.Id == showId).FirstOrDefault();
+                context.Remove(show);
+                context.SaveChanges();
+                return new SimpleResult();
+            }
+            catch (Exception e)
+            {
+                return new SimpleResult { ErrorMessage = "SongRepository->RemoveSongShowConnection: " + e.Message };
+            }
+        }
+
         public Result<bool> DoesShowExist(int showId)
         {
             try

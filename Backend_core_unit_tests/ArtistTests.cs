@@ -375,7 +375,7 @@ namespace Backend_core_unit_tests
                 }
             );
 
-            Result<ArtistsDto> result = service.getArtistsUsedInShow(showId);
+            Result<ArtistsDto> result = service.GetArtistsUsedInShow(showId);
 
             Assert.True(result.Data.Artists.Count == 3);
 
@@ -427,7 +427,7 @@ namespace Backend_core_unit_tests
                 }
             );
 
-            Result<ArtistsDto> result = service.getArtistsUsedInShow(showId);
+            Result<ArtistsDto> result = service.GetArtistsUsedInShow(showId);
 
             Assert.True(result.IsFailedWarning);
 
@@ -454,7 +454,7 @@ namespace Backend_core_unit_tests
                 }
             );
 
-            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+            Result<ArtistsDto> result = service.GetArtistsSearch("jeff");
 
             Assert.False(result.IsFailed);
             Assert.Equal(3, result.Data.Artists.Count);
@@ -479,7 +479,7 @@ namespace Backend_core_unit_tests
                 }
             );
 
-            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+            Result<ArtistsDto> result = service.GetArtistsSearch("jeff");
 
             Assert.False(result.IsFailed);
             Assert.Empty( result.Data.Artists);
@@ -504,7 +504,7 @@ namespace Backend_core_unit_tests
                 }
             );
 
-            Result<ArtistsDto> result = service.getArtistsSearch("jeff");
+            Result<ArtistsDto> result = service.GetArtistsSearch("jeff");
 
             Assert.True(result.IsFailed);
         }

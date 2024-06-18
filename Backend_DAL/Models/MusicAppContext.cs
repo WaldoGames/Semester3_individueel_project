@@ -46,10 +46,20 @@ namespace Backend_DAL.Models
             .WithOne(u => u.song)
             .OnDelete(DeleteBehavior.Cascade);
 
-            /*modelBuilder.Entity<Song>()
-                .HasMany(s => s.Artists)
-                .WithMany(a=>a.Songs)*/
+            modelBuilder.Entity<Show>()
+            .HasMany(rp => rp.Songs)
+            .WithOne(u => u.Show)
+            .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Show>()
+            .HasMany(rp => rp.show_Songs)
+            .WithOne(u => u.show)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Show>()
+            .HasMany(rp => rp.CreatedPlaylists)
+            .WithOne(u => u.Show)
+            .OnDelete(DeleteBehavior.Cascade);
         }
                 
         

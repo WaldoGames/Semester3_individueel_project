@@ -19,6 +19,7 @@ namespace Backend_core.Interfaces
         public SimpleResult CreateNewShow(NewShowDto newShow);
 
         public NullableResult<string> GetShowDiscriptionOfSong(int songId, int showId);
+        public SimpleResult DeleteShow(int showId);
 
     }
 }

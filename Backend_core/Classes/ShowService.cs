@@ -61,5 +61,10 @@ namespace Backend_core.Classes
 
            
         }
+
+        public SimpleResult RemovesShow(int ShowId)
+        {
+            return showRepository.DeleteShow(ShowId);
+        }
     }
 }

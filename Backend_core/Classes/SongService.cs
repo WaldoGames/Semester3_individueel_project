@@ -162,10 +162,10 @@ namespace Backend_core.Classes
             return songRepository.UpdateSong(updateSongDto);
         }
 
-        public SimpleResult RemoveSong(int SongId)
+        public SimpleResult RemoveSong(int songId)
         {
-            SimpleResult playListResult = playlistRepository.RemovePlaylistWithSong(SongId);
-            SimpleResult songShowResult = songRepository.RemoveSongShowConnection(SongId);
+            SimpleResult playListResult = playlistRepository.RemovePlaylistWithSong(songId);
+            SimpleResult songShowResult = songRepository.RemoveSongShowConnection(songId);
 
             if (playListResult.IsFailed)
             {
@@ -175,7 +175,7 @@ namespace Backend_core.Classes
             {
                 return songShowResult;
             }
-            SimpleResult songResult = songRepository.RemoveSong(SongId);
+            SimpleResult songResult = songRepository.RemoveSong(songId);
 
             if (songResult.IsFailed)
             {

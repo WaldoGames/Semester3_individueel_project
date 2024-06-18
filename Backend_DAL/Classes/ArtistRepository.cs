@@ -116,7 +116,7 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public Result<ArtistsDto> GetArtistsListFromSongList(List<int> songIds, int max, int Offset = 0)
+        public Result<ArtistsDto> GetArtistsListFromSongList(List<int> songIds, int max, int offset = 0)
         {
             try
             {

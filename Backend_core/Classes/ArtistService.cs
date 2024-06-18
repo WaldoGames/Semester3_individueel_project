@@ -48,7 +48,7 @@ namespace Backend_core.Classes
 
         }
 
-        public Result<ArtistsDto> getArtistsUsedInShow(int showId)
+        public Result<ArtistsDto> GetArtistsUsedInShow(int showId)
         {
 
             Result<SongsDto> songs = SongService.GetSongsUsedInShow(showId);
@@ -72,7 +72,7 @@ namespace Backend_core.Classes
 
         }
 
-        public Result<ArtistsDto> getArtistsSearch(string name)
+        public Result<ArtistsDto> GetArtistsSearch(string name)
         {
 
             Result<ArtistsDto> artists = ArtistRepository.GetArtistsForSearch(name);
@@ -85,7 +85,7 @@ namespace Backend_core.Classes
             return new Result<ArtistsDto> { Data = artists.Data };
 
         }
-        public SimpleResult addNewArtist(NewArtistDto newArtists)
+        public SimpleResult AddNewArtist(NewArtistDto newArtists)
         {
             return ArtistRepository.AddNewArtist(newArtists);
         }

@@ -140,10 +140,6 @@ namespace Backend_core.Classes
         {
             return playlistRepository.RemovePlaylist(playlistId);
         }
-        public SimpleResult RemovePlaylistWithSong(int playlistId)
-        {
-            return playlistRepository.RemovePlaylist(playlistId);
-        }
 
 
         public void ResetPlayListOrderIndex(List<PlayListItemDto> playlist){

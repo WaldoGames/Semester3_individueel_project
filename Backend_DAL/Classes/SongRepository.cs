@@ -219,18 +219,18 @@ namespace Backend_DAL.Classes
             }
         }
 
-        public SimpleResult UpdateSong(UpdateSongDto UpdateSongDto)
+        public SimpleResult UpdateSong(UpdateSongDto updateSongDto)
         {
             try
             {
-                Song song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == UpdateSongDto.Id).First();
-                if (UpdateSongDto.CreatorIds==null || UpdateSongDto.CreatorIds.Count > 0)
+                Song song = context.Songs.Include(s=>s.Artists).Where(s => s.Id == updateSongDto.Id).First();
+                if (updateSongDto.CreatorIds==null || updateSongDto.CreatorIds.Count > 0)
                 {
                     song.Artists.Clear();
 
-                    if (UpdateSongDto.CreatorIds != null && UpdateSongDto.CreatorIds.Any())
+                    if (updateSongDto.CreatorIds != null && updateSongDto.CreatorIds.Any())
                     {
-                        foreach (var artistId in UpdateSongDto.CreatorIds)
+                        foreach (var artistId in updateSongDto.CreatorIds)
                         {
                             var artist = context.Artists.Find(artistId);
                             if (artist != null)
@@ -244,11 +244,11 @@ namespace Backend_DAL.Classes
                     }
                 }
                 
-                if(UpdateSongDto.Release_date != DateTime.MinValue) song.Release_date = UpdateSongDto.Release_date;
-                if (UpdateSongDto.name != null)  song.name = UpdateSongDto.name;
+                if(updateSongDto.Release_date != DateTime.MinValue) song.Release_date = updateSongDto.Release_date;
+                if (updateSongDto.name != null)  song.name = updateSongDto.name;
 
-                Show_song show_song = context.Show_Song.Where(s => s.ShowId == UpdateSongDto.showId && s.SongId == UpdateSongDto.Id).FirstOrDefault();
-                if (show_song!=null && show_song.Information != null)  show_song.Information = UpdateSongDto.User_description;
+                Show_song show_song = context.Show_Song.Where(s => s.ShowId == updateSongDto.showId && s.SongId == updateSongDto.Id).FirstOrDefault();
+                if (show_song!=null && show_song.Information != null)  show_song.Information = updateSongDto.User_description;
                 context.SaveChanges();
                 return new SimpleResult();
             }

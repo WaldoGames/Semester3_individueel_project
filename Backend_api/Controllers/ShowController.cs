@@ -12,12 +12,12 @@ namespace Backend_api.Controllers
         ShowService showService { get; set; }
 
         [HttpPost]
-        public IActionResult AddNewShow(NewShowDto NewShow)
+        public IActionResult AddNewShow(NewShowDto newShow)
         {
             showService = new ShowService(new ShowRepository(), new UserRepository());
 
 
-            SimpleResult result = showService.CreateShow(NewShow);
+            SimpleResult result = showService.CreateShow(newShow);
 
             if (result.IsFailedError)
             {
@@ -32,11 +32,11 @@ namespace Backend_api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetShowsWithConnectionToUser(string AuthSub)
+        public IActionResult GetShowsWithConnectionToUser(string authSub)
         {
             showService = new ShowService(new ShowRepository(), new UserRepository());
 
-            Result<ShowsDto> result = showService.GetAllShowsWithConnectionToUser(AuthSub);
+            Result<ShowsDto> result = showService.GetAllShowsWithConnectionToUser(authSub);
 
             if (result.IsFailedError)
             {
@@ -51,6 +51,22 @@ namespace Backend_api.Controllers
                   .Select(a => new { id = a.Id, name = a.show_name, discription = a.show_description, language = a.show_language })
                   .ToList();
             return Ok(songs);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteShow(int ShowId)
+        {
+
+            showService = new ShowService(new ShowRepository(), new UserRepository());
+
+            SimpleResult result = showService.RemovesShow(ShowId);
+
+            if (result.IsFailedError)
+            {
+                return BadRequest();
+            }
+            return Ok();
+
         }
     }
 }

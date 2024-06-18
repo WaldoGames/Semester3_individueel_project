@@ -30,7 +30,7 @@ namespace Backend_core.Classes
             await Clients.Group(group).SendAsync("ReceiveMessage", message);
         }
 
-        public void SendCurrentRoomStatus(string GroupId, int playlistId, int showId, int index)
+        public void SendCurrentRoomStatus(string groupId, int playlistId, int showId, int index)
         {
             PlayListService service = new PlayListService(playlistRepository, songRepository, showRepository);
 
@@ -40,36 +40,36 @@ namespace Backend_core.Classes
 
             if (!result.IsFailed)
             {
-                Clients.Group(GroupId).SendAsync("UpdateCurrentRoomstate", result.Data);
+                Clients.Group(groupId).SendAsync("UpdateCurrentRoomstate", result.Data);
                 return;
             }
-            Clients.Group(GroupId).SendAsync("Error", "somethign went wrong with updating room status");
+            Clients.Group(groupId).SendAsync("Error", "something went wrong with updating room status");
 
         }
 
-        public async Task JoinRoom(string GroupId)
+        public async Task JoinRoom(string groupId)
         {
             //string c = Context.ConnectionId + ";
-            await Groups.AddToGroupAsync(Context.ConnectionId, GroupId);
-            await Clients.Group(GroupId).SendAsync("Host-SendCurrentRoomstate");
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
+            await Clients.Group(groupId).SendAsync("Host-SendCurrentRoomstate");
         }
-        public Task LeaveRoom(string GroupId)
+        public Task LeaveRoom(string groupId)
         {
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupId);
+            return Groups.RemoveFromGroupAsync(Context.ConnectionId, groupId);
         }
         public Task RequestCurrentRoomStatusFromHost(string GroupId)
         {
             return Clients.Group(GroupId).SendAsync("Host-SendCurrentRoomstate");
         }
-        public void MoveIndex(string GroupId, int amount)
+        public void MoveIndex(string groupId, int amount)
         {
             if(amount > 0)
             {
-                Clients.Group(GroupId).SendAsync("Host-Next", amount);
+                Clients.Group(groupId).SendAsync("Host-Next", amount);
             }
             else if(amount<0)
             {
-                Clients.Group(GroupId).SendAsync("Host-Previous", amount);
+                Clients.Group(groupId).SendAsync("Host-Previous", amount);
 
             }
             
